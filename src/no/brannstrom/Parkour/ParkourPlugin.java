@@ -37,8 +37,8 @@ public class ParkourPlugin extends JavaPlugin {
 		config = getConfig();
 		saveDefaultConfig();
 
-		createParkourStatsConfig();
 		createParkourConfig();
+		createParkourStatsConfig();
 		
 		saveParkourConfig();
 		saveParkourStatsConfig();
@@ -142,15 +142,15 @@ public class ParkourPlugin extends JavaPlugin {
 	/* --------------------------------------------------- */
 	
 	public void createParkourStatsConfig() {
-		parkoursFile = new File(getDataFolder(), "parkourStats.yml");
-		if(!parkoursFile.exists()) {
-			parkoursFile.getParentFile().mkdirs();
+		parkourStatsFile = new File(getDataFolder(), "parkourStats.yml");
+		if(!parkourStatsFile.exists()) {
+			parkourStatsFile.getParentFile().mkdirs();
 			saveResource("parkourStats.yml", true);
 		}
 
-		parkours = new YamlConfiguration();
+		parkourStats = new YamlConfiguration();
 		try {
-			parkours.load(parkoursFile);
+			parkourStats.load(parkourStatsFile);
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
@@ -159,23 +159,23 @@ public class ParkourPlugin extends JavaPlugin {
 
 	public void saveParkourStatsConfig() {
 		try { 
-			parkours.getConfigurationSection("parkourstats").getKeys(false).forEach(key -> {
-				parkours.set("parkourstats." + key, null);
+			parkourStats.getConfigurationSection("parkourstats").getKeys(false).forEach(key -> {
+				parkourStats.set("parkourstats." + key, null);
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		for(Map.Entry<String, ParkourStats> entry : MemoryHandler.parkourStats.entrySet()) {
-			ParkourStats parkourStats = entry.getValue();
-			List<String> names = parkourStats.getNames();
-			List<Long> times = parkourStats.getTimes();
+			ParkourStats stats = entry.getValue();
+			List<String> names = stats.getNames();
+			List<Long> times = stats.getTimes();
 			for(int i = 0; i < names.size(); i++) {
-				parkours.set("parkourstats." + entry.getKey() + "." + names.get(i),times.get(i));
+				parkourStats.set("parkourstats." + entry.getKey() + "." + names.get(i),times.get(i));
 			}
 		}
 		try {
-			parkours.save(parkoursFile);
+			parkourStats.save(parkourStatsFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -183,16 +183,16 @@ public class ParkourPlugin extends JavaPlugin {
 
 	public void restoreParkourStatsConfig() {
 		try {
-			parkours.getConfigurationSection("parkourstats").getKeys(false).forEach(key -> {
-				ParkourStats parkourStats = new ParkourStats();
+			parkourStats.getConfigurationSection("parkourstats").getKeys(false).forEach(key -> {
+				ParkourStats stats = new ParkourStats();
 				List<String> names = new ArrayList<>();
 				List<Long> times= new ArrayList<>();
-				parkours.getConfigurationSection("parkoursstats." + key).getKeys(false).forEach(name -> {
+				parkourStats.getConfigurationSection("parkourstats." + key).getKeys(false).forEach(name -> {
 					long time = parkours.getLong("parkourstats." + key + "." + name);
 					names.add(name);
 					times.add(time);
 				});
-				MemoryHandler.parkourStats.put(key, parkourStats);
+				MemoryHandler.parkourStats.put(key, stats);
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
