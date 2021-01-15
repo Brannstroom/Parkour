@@ -1,0 +1,19 @@
+### Parkour config
+
+## Permissions
+
+Admin Permission: 'parkour.admin'
+
+## Tanslatable messages
+
+Parkour Joined: '&aYou successfully joined the &f<parkour> &aparkour.'
+
+Parkour Created: '&aYou successfully created a parkour named &f<parkour>&a. Now use settp, setstart and setfinish to finish the parkour.'
+
+Set Parkour Join Location: '&aYou successfully set a join location for the &f<parkour> &aparkour.'
+
+Set Parkour Start Location: '&aYou successfully set a start location for the &f<parkour> &aparkour.'
+
+Set Parkour Finish Location: '&aYou successfully set a finish location for the &f<parkour> &aparkour.'
+
+Finished Parkour: '&aYou finished &f<parkour> &awith a time of <time>.'
