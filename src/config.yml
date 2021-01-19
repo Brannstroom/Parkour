@@ -17,3 +17,5 @@ Set Parkour Start Location: '&aYou successfully set a start location for the &f<
 Set Parkour Finish Location: '&aYou successfully set a finish location for the &f<parkour> &aparkour.'
 
 Finished Parkour: '&aYou finished &f<parkour> &awith a time of <time>.'
+
+No Parkours: '&cNo parkours exist. If you are staff, set a parkour using /parkour create <name>.'

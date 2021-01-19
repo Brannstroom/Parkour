@@ -21,14 +21,18 @@ public class MessageHandler {
 	}
 	
 	public static void sendList(Player p) {
+		if(!MemoryHandler.parkours.isEmpty()) {
 		String parkourList = "";
 		for(Parkour parkour : MemoryHandler.parkours) {
 			parkourList += parkour.getName() + ", ";
 		}		
-		parkourList = parkourList.substring(0, parkourList.length() - 1);
+		parkourList = parkourList.substring(0, parkourList.length() - 2);
 		
 		p.sendMessage("Parkour List");
 		p.sendMessage(parkourList);
+		} else {
+			p.sendMessage(InfoKeeper.noParkours);
+		}
 	}
 
 	public static void showParkourInfo(Player p, Parkour parkour) {

@@ -17,4 +17,5 @@ public class InfoKeeper {
 	public static String setParkourStartLocation = ChatColor.translateAlternateColorCodes('&', config.getString("Set Parkour Start Location"));
 	public static String setParkourFinishLocation = ChatColor.translateAlternateColorCodes('&', config.getString("Set Parkour Finish Location"));
 	public static String finishedParkour = ChatColor.translateAlternateColorCodes('&', config.getString("Finished Parkour"));
+	public static String noParkours = ChatColor.translateAlternateColorCodes('&', config.getString("No Parkours"));
 }
