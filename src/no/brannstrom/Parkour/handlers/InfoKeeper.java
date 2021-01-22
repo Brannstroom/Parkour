@@ -18,4 +18,8 @@ public class InfoKeeper {
 	public static String setParkourFinishLocation = ChatColor.translateAlternateColorCodes('&', config.getString("Set Parkour Finish Location"));
 	public static String finishedParkour = ChatColor.translateAlternateColorCodes('&', config.getString("Finished Parkour"));
 	public static String noParkours = ChatColor.translateAlternateColorCodes('&', config.getString("No Parkours"));
+	public static String improvedTime = ChatColor.translateAlternateColorCodes('&', config.getString("Improved Time"));
+	public static String parkourStartedHotbar = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Started Hotbar"));
+	public static String parkourFinishedHotbar = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Finished Hotbar"));
+	public static String parkourRemoved = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Removed"));
 }

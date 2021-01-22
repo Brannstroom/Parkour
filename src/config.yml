@@ -6,16 +6,24 @@ Admin Permission: 'parkour.admin'
 
 ## Tanslatable messages
 
-Parkour Joined: '&aYou successfully joined the &f<parkour> &aparkour.'
+Parkour Joined: '&aYou successfully joined the {0} &aparkour.'
 
-Parkour Created: '&aYou successfully created a parkour named &f<parkour>&a. Now use settp, setstart and setfinish to finish the parkour.'
+Parkour Created: '&aYou successfully created a parkour named {0}. Now use settp, setstart and setfinish to finish the parkour.'
 
-Set Parkour Join Location: '&aYou successfully set a join location for the &f<parkour> &aparkour.'
+Set Parkour Join Location: '&aYou successfully set a join location for the {0} &aparkour.'
 
-Set Parkour Start Location: '&aYou successfully set a start location for the &f<parkour> &aparkour.'
+Set Parkour Start Location: '&aYou successfully set a start location for the {0} &aparkour.'
 
-Set Parkour Finish Location: '&aYou successfully set a finish location for the &f<parkour> &aparkour.'
+Set Parkour Finish Location: '&aYou successfully set a finish location for the {0} &aparkour.'
 
-Finished Parkour: '&aYou finished &f<parkour> &awith a time of <time>.'
+Finished Parkour: '&aYou finished {0} with the time of {1}.'
 
 No Parkours: '&cNo parkours exist. If you are staff, set a parkour using /parkour create <name>.'
+
+Improved Time: '&aYou finished {0} in {1}, and improved your previous time by {2}.'
+
+Parkour Started Hotbar: '&aYou started the parkour'
+
+Parkour Finished Hotbar: '&aYou finished the parkour'
+
+Parkour Removed: '&aYou successfully removed {0}.'

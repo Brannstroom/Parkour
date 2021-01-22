@@ -3,7 +3,6 @@ package no.brannstrom.Parkour.handlers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourPlayer;
@@ -18,6 +17,6 @@ public class MemoryHandler {
 	public static List<Parkour> parkours = new ArrayList<>();
 	
 	// UUID = Players uuid, Long = parkour starttime
-	public static HashMap<UUID, ParkourPlayer> parkourPlayers = new HashMap<>();
+	public static HashMap<String, ParkourPlayer> parkourPlayers = new HashMap<>();
 
 }

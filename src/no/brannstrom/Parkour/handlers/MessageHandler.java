@@ -11,9 +11,11 @@ public class MessageHandler {
 		p.sendMessage("Parkour");
 		p.sendMessage("Use: '/parkour list' to list all parkours");
 		p.sendMessage("Use: '/parkour join <name>' to join a parkour");
+		p.sendMessage("Use: '/parkour stats <name>' to see stats");
 		if(p.hasPermission(InfoKeeper.adminPermission)) {
 			p.sendMessage("Use: '/parkour <name>' to get info about a parkour");
 			p.sendMessage("Use: '/parkour create <name>' to create a parkour");
+			p.sendMessage("Use: '/parkour remove <name>' to remove a parkour");
 			p.sendMessage("Use: '/parkour setjoin <name>' to set teleport location for parkour");
 			p.sendMessage("Use: '/parkour setstart <name>' to set a parkours start point");
 			p.sendMessage("Use: '/parkour setfinish <name>' to set a parkours finish point");

@@ -51,13 +51,13 @@ public class ParkourPlugin extends JavaPlugin {
 		createParkourConfig();
 		createParkourStatsConfig();
 		
-		saveParkourConfig();
-		saveParkourStatsConfig();
+		restoreParkourConfig();
+		restoreParkourStatsConfig();
 	}
 
 	public void onDisable() {
-		restoreParkourConfig();
-		restoreParkourStatsConfig();
+		saveParkourConfig();
+		saveParkourStatsConfig();
 	}
 
 	private void loadListeners() {
@@ -99,11 +99,11 @@ public class ParkourPlugin extends JavaPlugin {
 		}
 	}
 	
-	public void createParkourConfig() {
+	private void createParkourConfig() {
 		parkoursFile = new File(getDataFolder(), "parkours.yml");
 		if(!parkoursFile.exists()) {
 			parkoursFile.getParentFile().mkdirs();
-			saveResource("parkours.yml", true);
+			saveResource("parkours.yml", false);
 		}
 
 		parkours = new YamlConfiguration();
@@ -114,7 +114,7 @@ public class ParkourPlugin extends JavaPlugin {
 		}
 	}
 
-	public void saveParkourConfig() {
+	private void saveParkourConfig() {
 		try { 
 			parkours.getConfigurationSection("parkours").getKeys(false).forEach(key -> {
 				parkours.set("parkours." + key + ".join.world", null);
@@ -148,21 +148,21 @@ public class ParkourPlugin extends JavaPlugin {
 			Location startPoint = parkour.getStartPoint();
 			Location finishPoint = parkour.getFinishPoint();
 			
-			parkours.set("parkours." + name + ".join.world", joinTeleport.getWorld().toString());
+			parkours.set("parkours." + name + ".join.world", joinTeleport.getWorld().getName());
 			parkours.set("parkours." + name + ".join.x", joinTeleport.getX());
 			parkours.set("parkours." + name + ".join.y", joinTeleport.getY());
 			parkours.set("parkours." + name + ".join.z", joinTeleport.getZ());
 			parkours.set("parkours." + name + ".join.pitch", joinTeleport.getPitch());
 			parkours.set("parkours." + name + ".join.yaw", joinTeleport.getYaw());
 			
-			parkours.set("parkours." + name + ".startpoint.world", startPoint.getWorld().toString());
+			parkours.set("parkours." + name + ".startpoint.world", startPoint.getWorld().getName());
 			parkours.set("parkours." + name + ".startpoint.x", startPoint.getX());
 			parkours.set("parkours." + name + ".startpoint.y", startPoint.getY());
 			parkours.set("parkours." + name + ".startpoint.z", startPoint.getZ());
 			parkours.set("parkours." + name + ".startpoint.pitch", startPoint.getPitch());
 			parkours.set("parkours." + name + ".startpoint.yaw", startPoint.getYaw());
 			
-			parkours.set("parkours." + name + ".finishpoint.world", finishPoint.getWorld().toString());
+			parkours.set("parkours." + name + ".finishpoint.world", finishPoint.getWorld().getName());
 			parkours.set("parkours." + name + ".finishpoint.x", finishPoint.getX());
 			parkours.set("parkours." + name + ".finishpoint.y", finishPoint.getY());
 			parkours.set("parkours." + name + ".finishpoint.z", finishPoint.getZ());
@@ -172,11 +172,11 @@ public class ParkourPlugin extends JavaPlugin {
 		try {
 			parkours.save(parkoursFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("[Parkour] Error: Parkours not saved becuase of error, or because there was no parkours to be saved.");
 		}
 	}
 
-	public void restoreParkourConfig() {
+	private void restoreParkourConfig() {
 		try {
 			parkours.getConfigurationSection("parkours").getKeys(false).forEach(key -> {
 				Parkour parkour = new Parkour();
@@ -210,28 +210,28 @@ public class ParkourPlugin extends JavaPlugin {
 				MemoryHandler.parkours.add(parkour);
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("[Parkour] Error: Parkour config not restores because of error, or because no parkours exist.");
 		}
 	}
 	
 	/* --------------------------------------------------- */
 	
-	public void createParkourStatsConfig() {
+	private void createParkourStatsConfig() {
 		parkourStatsFile = new File(getDataFolder(), "parkourstats.yml");
 		if(!parkourStatsFile.exists()) {
 			parkourStatsFile.getParentFile().mkdirs();
-			saveResource("parkourstats.yml", true);
+			saveResource("parkourstats.yml", false);
 		}
 
 		parkourStats = new YamlConfiguration();
 		try {
-			parkours.load(parkourStatsFile);
+			parkourStats.load(parkourStatsFile);
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void saveParkourStatsConfig() {
+	private void saveParkourStatsConfig() {
 		try { 
 			parkourStats.getConfigurationSection("parkourstats").getKeys(false).forEach(key -> {
 				parkourStats.set("parkourstats." + key, null);
@@ -251,11 +251,11 @@ public class ParkourPlugin extends JavaPlugin {
 		try {
 			parkourStats.save(parkourStatsFile);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("[Parkour] Error: Parkourstats config not saved because of error, or because there was no parkourstats to be saved.");
 		}
 	}
 
-	public void restoreParkourStatsConfig() {
+	private void restoreParkourStatsConfig() {
 		try {
 			parkourStats.getConfigurationSection("parkourstats").getKeys(false).forEach(key -> {
 				ParkourStats stats = new ParkourStats();
@@ -269,7 +269,7 @@ public class ParkourPlugin extends JavaPlugin {
 				MemoryHandler.parkourStats.put(key, stats);
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("[Parkour] Error: Parkourstats config not restores because of error, or because no parkourstats exist.");
 		}
 	}
 	

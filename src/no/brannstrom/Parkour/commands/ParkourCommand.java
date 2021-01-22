@@ -24,12 +24,16 @@ public class ParkourCommand implements CommandExecutor {
 				ParkourHandler.joinParkour(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("create") && ParkourHandler.getParkour(args[1]) == null) {
 				ParkourHandler.createParkour(p, args[1]);
+			} else if(args[0].equalsIgnoreCase("remove") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.removeParkour(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("setjoin") && ParkourHandler.getParkour(args[1]) != null) {
 				ParkourHandler.setJoinLocation(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("setstart") && ParkourHandler.getParkour(args[1]) != null) {
 				ParkourHandler.setStartLocation(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("setfinish") && ParkourHandler.getParkour(args[1]) != null) {
 				ParkourHandler.setFinishLocation(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("stats") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.showStats(p, ParkourHandler.getParkour(args[1]));
 			} else {
 				MessageHandler.sendPlayerInfoMessage(p);
 			}
