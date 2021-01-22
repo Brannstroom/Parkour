@@ -1,6 +1,8 @@
 package no.brannstrom.Parkour.handlers;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -83,8 +85,8 @@ public class ParkourHandler {
 	}
 
 	public static void showStats(Player p, Parkour parkour) {
-		ParkourStats pStats = MemoryHandler.parkourStats.get(p.getUniqueId().toString());
-		if(pStats != null) {
+		if(hasFinishedParkourBefore(p, parkour)) {
+			ParkourStats pStats = MemoryHandler.parkourStats.get(p.getUniqueId().toString());
 			p.sendMessage(parkour.getName() + " with the time " + MainHandler.formatTime(pStats.getTimes().get(pStats.getNames().indexOf(parkour.getName()))));
 		} else {
 			p.sendMessage("You havent finished the " + parkour.getName() + " parkour.");
@@ -222,10 +224,10 @@ public class ParkourHandler {
 	}
 	
 	public static void sendFinishMessageUnimproved(Player p, Parkour parkour, long time) {
-		p.sendMessage(InfoKeeper.finishedParkour.replaceAll("{0}", parkour.getName()).replaceAll("{1}", MainHandler.formatTime(time)));
+		p.sendMessage("You finished the game in " + new SimpleDateFormat("mm:ss:SSS").format(new Date(time)));
 	}
 	
 	public static void sendFinishMessageImproved(Player p, Parkour parkour, long previousTime, long newTime) {
-		p.sendMessage(InfoKeeper.improvedTime.replaceAll("{0}", parkour.getName()).replaceAll("{1}", MainHandler.formatTime(newTime)).replaceAll("{2}", MainHandler.formatTime(previousTime-newTime)));
+		p.sendMessage("You finished the game in " + new SimpleDateFormat("mm:ss:SSS").format(new Date(newTime)) + " and improved your previous by " + new SimpleDateFormat("mm:ss:SSS").format(new Date(previousTime-newTime)));
 	}
 }
