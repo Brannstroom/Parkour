@@ -2,23 +2,24 @@ package no.brannstrom.Parkour.handlers;
 
 import org.bukkit.entity.Player;
 
+import net.md_5.bungee.api.ChatColor;
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourStats;
 
 public class MessageHandler {
 
 	public static void sendPlayerInfoMessage(Player p) {
-		p.sendMessage("Parkour");
-		p.sendMessage("Use: '/parkour list' to list all parkours");
-		p.sendMessage("Use: '/parkour join <name>' to join a parkour");
-		p.sendMessage("Use: '/parkour stats <name>' to see stats");
+		p.sendMessage(ChatColor.BLUE + " ---- " + ChatColor.DARK_BLUE + "Parkour" +  ChatColor.BLUE + " ---- ");
+		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour list" + ChatColor.BLUE + "' to list all parkours");
+		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour join <name>" + ChatColor.BLUE + "' to join a parkour");
+		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour stats <name>" + ChatColor.BLUE + "' to see stats on a parkour");
 		if(p.hasPermission(InfoKeeper.adminPermission)) {
-			p.sendMessage("Use: '/parkour <name>' to get info about a parkour");
-			p.sendMessage("Use: '/parkour create <name>' to create a parkour");
-			p.sendMessage("Use: '/parkour remove <name>' to remove a parkour");
-			p.sendMessage("Use: '/parkour setjoin <name>' to set teleport location for parkour");
-			p.sendMessage("Use: '/parkour setstart <name>' to set a parkours start point");
-			p.sendMessage("Use: '/parkour setfinish <name>' to set a parkours finish point");
+			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour <name>" + ChatColor.BLUE + "' to get info about a parkour");
+			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour create <name>" + ChatColor.BLUE + "' to create a parkour");
+			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour remove <name>" + ChatColor.BLUE + "' to remove a parkour");
+			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setjoin <name>" + ChatColor.BLUE + "' to set teleport location for parkour");
+			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setstart <name>" + ChatColor.BLUE + "' to set a parkours start point");
+			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setfinish <name>" + ChatColor.BLUE + "' to set a parkours finish point");
 		}
 	}
 	

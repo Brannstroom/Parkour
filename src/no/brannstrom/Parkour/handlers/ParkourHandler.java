@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -36,33 +35,21 @@ public class ParkourHandler {
 		long time = System.currentTimeMillis()-parkourPlayer.getStartTime();
 		
 		Parkour parkour = parkourPlayer.getParkour();
-		Bukkit.broadcastMessage("1");
 		ParkourStats pStats = null;
 		if(MemoryHandler.parkourStats.containsKey(p.getUniqueId().toString())) {
-			Bukkit.broadcastMessage("2");
 			pStats = MemoryHandler.parkourStats.get(p.getUniqueId().toString());
 			if(hasFinishedParkourBefore(p, parkour)) {
-				Bukkit.broadcastMessage("3");
 				long previousTime = pStats.getTimes().get(pStats.getNames().indexOf(parkour.getName()));
-				Bukkit.broadcastMessage("4");
 				if(time < previousTime) {
-					Bukkit.broadcastMessage("5");
 					sendFinishMessageImproved(p, parkour, previousTime, time);
-					Bukkit.broadcastMessage("6");
 					pStats.getTimes().set(pStats.getNames().indexOf(parkour.getName()), time);
-					Bukkit.broadcastMessage("7");
 				} else {
-					Bukkit.broadcastMessage("8");
 					sendFinishMessageUnimproved(p, parkour, time);
-					Bukkit.broadcastMessage("9");	
 				}
 			} else {
-				Bukkit.broadcastMessage("10");
 				sendFinishMessageUnimproved(p, parkour, time);
-				Bukkit.broadcastMessage("11");
 			}
 		} else {
-			Bukkit.broadcastMessage("12");
 			pStats = new ParkourStats();
 			List<String> names = new ArrayList<>();
 			List<Long> times = new ArrayList<>();
@@ -70,11 +57,8 @@ public class ParkourHandler {
 			times.add(time);
 			pStats.setNames(names);
 			pStats.setTimes(times);
-			Bukkit.broadcastMessage("13");
 			MemoryHandler.parkourStats.put(p.getUniqueId().toString(), pStats);
-			Bukkit.broadcastMessage("14");
 			sendFinishMessageUnimproved(p, parkour, time);
-			Bukkit.broadcastMessage("15");
 		}
 
 		MainHandler.sendActionBar(p, InfoKeeper.parkourFinishedHotbar);
@@ -85,12 +69,14 @@ public class ParkourHandler {
 	}
 
 	public static void showStats(Player p, Parkour parkour) {
-		if(hasFinishedParkourBefore(p, parkour)) {
-			ParkourStats pStats = MemoryHandler.parkourStats.get(p.getUniqueId().toString());
-			p.sendMessage(parkour.getName() + " with the time " + MainHandler.formatTime(pStats.getTimes().get(pStats.getNames().indexOf(parkour.getName()))));
-		} else {
-			p.sendMessage("You havent finished the " + parkour.getName() + " parkour.");
-		}
+//		if(hasFinishedParkourBefore(p, parkour)) {
+//			ParkourStats pStats = MemoryHandler.parkourStats.get(p.getUniqueId().toString());
+//			p.sendMessage(parkour.getName() + " with the time " + MainHandler.formatTime(pStats.getTimes().get(pStats.getNames().indexOf(parkour.getName()))));
+//		} else {
+//			p.sendMessage("You havent finished the " + parkour.getName() + " parkour.");
+//		}
+		
+		
 	}
 
 	public static boolean isParkour(String name) {
@@ -144,7 +130,7 @@ public class ParkourHandler {
 
 		MemoryHandler.parkours.add(parkour);
 
-		p.sendMessage(InfoKeeper.parkourCreated.replaceAll("{0}", name));
+		p.sendMessage(InfoKeeper.parkourCreated.replaceAll("<parkour>", name));
 	}
 	
 	public static void removeParkour(Player p, Parkour parkour) {
@@ -159,22 +145,22 @@ public class ParkourHandler {
 				pStats.getNames().remove(parkour.getName());
 			}
 		}
-		p.sendMessage(InfoKeeper.parkourRemoved.replaceAll("{0}", parkour.getName()));
+		p.sendMessage(InfoKeeper.parkourRemoved.replaceAll("<parkour>", parkour.getName()));
 	}
 
 	public static void setJoinLocation(Player p, Parkour parkour) {
 		parkour.setJoinTeleport(p.getLocation());
-		p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("{0}", parkour.getName()));
+		p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("<parkour>", parkour.getName()));
 	}
 
 	public static void setStartLocation(Player p, Parkour parkour) {
 		parkour.setStartPoint(p.getLocation());
-		p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("{0}", parkour.getName()));
+		p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("<parkour>", parkour.getName()));
 	}
 
 	public static void setFinishLocation(Player p, Parkour parkour) {
 		parkour.setFinishPoint(p.getLocation());
-		p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("{0}", parkour.getName()));
+		p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("<parkour>", parkour.getName()));
 	}
 
 	public static boolean isStartPressurePlate(Block b) {
@@ -224,10 +210,10 @@ public class ParkourHandler {
 	}
 	
 	public static void sendFinishMessageUnimproved(Player p, Parkour parkour, long time) {
-		p.sendMessage("You finished the game in " + new SimpleDateFormat("mm:ss:SSS").format(new Date(time)));
+		p.sendMessage(InfoKeeper.finishedParkour.replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
 	}
 	
 	public static void sendFinishMessageImproved(Player p, Parkour parkour, long previousTime, long newTime) {
-		p.sendMessage("You finished the game in " + new SimpleDateFormat("mm:ss:SSS").format(new Date(newTime)) + " and improved your previous by " + new SimpleDateFormat("mm:ss:SSS").format(new Date(previousTime-newTime)));
+		p.sendMessage(InfoKeeper.improvedTime.replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(newTime))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(previousTime-newTime))));
 	}
 }
