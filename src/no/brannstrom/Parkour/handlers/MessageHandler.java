@@ -4,34 +4,33 @@ import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
 import no.brannstrom.Parkour.model.Parkour;
-import no.brannstrom.Parkour.model.ParkourStats;
+import no.brannstrom.Parkour.service.ParkourService;
 
 public class MessageHandler {
 
 	public static void sendPlayerInfoMessage(Player p) {
 		p.sendMessage(ChatColor.BLUE + " ---- " + ChatColor.DARK_BLUE + "Parkour" +  ChatColor.BLUE + " ---- ");
-		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour list" + ChatColor.BLUE + "' to list all parkours");
-		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour join <name>" + ChatColor.BLUE + "' to join a parkour");
-		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour stats <name>" + ChatColor.BLUE + "' to see stats on a parkour");
-		if(p.hasPermission(InfoKeeper.adminPermission)) {
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour <name>" + ChatColor.BLUE + "' to get info about a parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour create <name>" + ChatColor.BLUE + "' to create a parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour remove <name>" + ChatColor.BLUE + "' to remove a parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setjoin <name>" + ChatColor.BLUE + "' to set teleport location for parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setstart <name>" + ChatColor.BLUE + "' to set a parkours start point");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setfinish <name>" + ChatColor.BLUE + "' to set a parkours finish point");
+		p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour list" + ChatColor.BLUE + "' for å se en liste over alle parkours");
+		p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour stats <name>" + ChatColor.BLUE + "' for å se stats på en parkour");
+		if(p.hasPermission("spillere.admin")) {
+			p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour <name>" + ChatColor.BLUE + "' for å se info om en parkour");
+			p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour create <name>" + ChatColor.BLUE + "' for å lage en parkour");
+			p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour remove <name>" + ChatColor.BLUE + "' for å fjerne en parkour");
+			p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour setjoin <name>" + ChatColor.BLUE + "' for å sette tp lokasjon på en parkour");
+			p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour setstart <name>" + ChatColor.BLUE + "' for å sette start lokasjon på en parkour");
+			p.sendMessage(ChatColor.BLUE + "Bruk: '" + ChatColor.DARK_BLUE + "/parkour setfinish <name>" + ChatColor.BLUE + "' for å sette slutt lokasjon på en parkour");
 		}
 	}
 	
 	public static void sendList(Player p) {
-		if(!MemoryHandler.parkours.isEmpty()) {
+		if(!ParkourService.getParkours().isEmpty()) {
 		String parkourList = "";
-		for(Parkour parkour : MemoryHandler.parkours) {
+		for(Parkour parkour : ParkourService.getParkours()) {
 			parkourList += parkour.getName() + ", ";
 		}		
 		parkourList = parkourList.substring(0, parkourList.length() - 2);
 		
-		p.sendMessage("Parkour List");
+		p.sendMessage(ChatColor.BLUE + " ---- " + ChatColor.DARK_BLUE + "Parkours " + ChatColor.BLUE + "(" + ChatColor.DARK_BLUE + ParkourService.getParkours().size() + ChatColor.BLUE + ") ---- ");
 		p.sendMessage(parkourList);
 		} else {
 			p.sendMessage(InfoKeeper.noParkours);
@@ -39,33 +38,13 @@ public class MessageHandler {
 	}
 
 	public static void showParkourInfo(Player p, Parkour parkour) {
-		if(p.hasPermission(InfoKeeper.adminPermission)) {
-			p.sendMessage(parkourTime(p, parkour));
+		if(p.hasPermission("spillere.admin")) {
 			p.sendMessage("Name: " + parkour.getName());
 			p.sendMessage("Join Position: X:" + parkour.getJoinTeleport().getX() + " Y:" + parkour.getJoinTeleport().getY() + " Z:" + parkour.getJoinTeleport().getZ());
 			p.sendMessage("Start Position: X:" + parkour.getStartPoint().getX() + " Y:" + parkour.getStartPoint().getY() + " Z:" + parkour.getStartPoint().getZ());
 			p.sendMessage("Finish Position: X:" + parkour.getFinishPoint().getX() + " Y:" + parkour.getFinishPoint().getY() + " Z:" + parkour.getFinishPoint().getZ());
 		} else {
-			p.sendMessage(parkourTime(p, parkour));
+			p.sendMessage(InfoKeeper.permission);
 		}
 	}
-	
-	public static String parkourTime(Player p, Parkour parkour) {
-		ParkourStats parkourStats = null;
-		String returning = "";
-		if(MemoryHandler.parkourStats.containsKey(p.getUniqueId().toString())) {
-			parkourStats = MemoryHandler.parkourStats.get(p.getUniqueId().toString());
-			
-			if(parkourStats.getNames().contains(parkour.getName())) {
-				returning = parkour.getName() + " : " + parkourStats.getTimes().get(parkourStats.getNames().indexOf(parkour.getName()));
-			} else {
-				returning = "You have not finished this parkour";
-			}
-		} else {
-			returning = "You have not finished any parkour";
-		}
-		
-		return returning;
-	}
-	
 }

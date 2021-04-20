@@ -1,25 +1,20 @@
 package no.brannstrom.Parkour.handlers;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
-import net.md_5.bungee.api.ChatColor;
-import no.brannstrom.Parkour.ParkourPlugin;
+import org.bukkit.ChatColor;
 
 public class InfoKeeper {
 	
-	static FileConfiguration config = ParkourPlugin.getPlugin(ParkourPlugin.class).getConfig();
-
-	public static String adminPermission = config.getString("Admin Permission");
-	
-	public static String parkourJoined = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Joined"));
-	public static String parkourCreated = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Created"));
-	public static String setParkourJoinLocation = ChatColor.translateAlternateColorCodes('&', config.getString("Set Parkour Join Location"));
-	public static String setParkourStartLocation = ChatColor.translateAlternateColorCodes('&', config.getString("Set Parkour Start Location"));
-	public static String setParkourFinishLocation = ChatColor.translateAlternateColorCodes('&', config.getString("Set Parkour Finish Location"));
-	public static String finishedParkour = ChatColor.translateAlternateColorCodes('&', config.getString("Finished Parkour"));
-	public static String noParkours = ChatColor.translateAlternateColorCodes('&', config.getString("No Parkours"));
-	public static String improvedTime = ChatColor.translateAlternateColorCodes('&', config.getString("Improved Time"));
-	public static String parkourStartedHotbar = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Started Hotbar"));
-	public static String parkourFinishedHotbar = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Finished Hotbar"));
-	public static String parkourRemoved = ChatColor.translateAlternateColorCodes('&', config.getString("Parkour Removed"));
+	public static String parkourJoined = ChatColor.GREEN + "Du startet " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + "parkouren.";
+	public static String parkourCreated = ChatColor.GREEN + "Du lagde en parkour med navnet " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + "Bruk settp, setstart og setfinish for å gjøre ferdig parkouren.";
+	public static String setParkourJoinLocation = ChatColor.GREEN + "Du satt tp lokasjon for " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + " parkouren.";
+	public static String setParkourStartLocation = ChatColor.GREEN + "Du satt start lokasjon for " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + " parkouren.";
+	public static String setParkourFinishLocation = ChatColor.GREEN + "Du satt slutt lokasjon for " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + " parkouren.";
+	public static String finishedParkour = ChatColor.GREEN + "Du fullførte " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + " med tiden " + ChatColor.DARK_GREEN + "<time>" + ChatColor.GREEN + ".";
+	public static String noParkours = ChatColor.GREEN + "Ingen parkour eksisterer. Lag en parkour med /parkour create <navn>.";
+	public static String improvedTime = ChatColor.GREEN + "Du fullførte " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + " med tiden " + ChatColor.DARK_GREEN + "<time>" + ChatColor.GREEN + ", en forbedring på " + ChatColor.DARK_GREEN + "<improvement>" + ChatColor.GREEN + ".";
+	public static String parkourStartedHotbar = ChatColor.GREEN + "Du startet parkouren";
+	public static String parkourFinishedHotbar = ChatColor.GREEN +  "Du fullførte parkouren";
+	public static String parkourRemoved = ChatColor.GREEN + "Du fjernet " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + " parkouren.";
+	public static String newParkourRecord = "<player>" + ChatColor.GREEN + " satt ny rekord på " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.DARK_GREEN + " parkouren med en tid på " + ChatColor.DARK_GREEN + "<time>" + ChatColor.GREEN + ", en forbedring på " + ChatColor.DARK_GREEN + "<improvement>" + ChatColor.GREEN + ".";
+	public static String permission = ChatColor.RED + "Du har ikke tillatelse til å utføre denne kommandoen!";
 }
