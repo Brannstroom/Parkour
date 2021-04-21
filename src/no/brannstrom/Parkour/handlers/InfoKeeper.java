@@ -17,6 +17,4 @@ public class InfoKeeper {
 	public static String parkourRemoved = ChatColor.GREEN + "Du fjernet " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.GREEN + " parkouren.";
 	public static String newParkourRecord = "<player>" + ChatColor.GREEN + " satt ny rekord på " + ChatColor.DARK_GREEN + "<parkour>" + ChatColor.DARK_GREEN + " parkouren med en tid på " + ChatColor.DARK_GREEN + "<time>" + ChatColor.GREEN + ", en forbedring på " + ChatColor.DARK_GREEN + "<improvement>" + ChatColor.GREEN + ".";
 	public static String permission = ChatColor.RED + "Du har ikke tillatelse til å utføre denne kommandoen!";
-	public static String parkourDontExist = ChatColor.RED + "Parkouren " + ChatColor.DARK_RED + "<parkour>" + ChatColor.RED + " eksisterer ikke.";
-	public static String parkourAlreadyExist = ChatColor.RED + "Parkouren " + ChatColor.DARK_RED + "<parkour>" + ChatColor.RED + " eksisterer allerede.";
 }

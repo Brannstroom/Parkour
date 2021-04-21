@@ -12,7 +12,7 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import no.brannstrom.Parkour.model.SParkour;
+import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourStats;
 
 public class ParkourStatsService {
@@ -20,7 +20,7 @@ public class ParkourStatsService {
 	private static List<ParkourStats> cache = Collections.synchronizedList(new ArrayList<>());
 	
 	private static Client client = ClientBuilder.newClient();
-	private static String url = "127.0.0.1:8080";
+	private static String url = "127.0.0.1";
 	
 	public static ParkourStats update(ParkourStats parkourStats) {
 		ParkourStats response = client
@@ -61,7 +61,7 @@ public class ParkourStatsService {
 		else return response;
 	}
 	
-	public static ParkourStats getParkourRecord(SParkour parkour) {
+	public static ParkourStats getParkourRecord(Parkour parkour) {
 		ParkourStats response = client
 				.target("http://" + url + "/parkourStatses/search/getParkourRecord")
 				.queryParam("name", parkour.getName())
@@ -72,7 +72,7 @@ public class ParkourStatsService {
 		else return response;
 	}
 	
-	public static List<ParkourStats> getParkourRecordTop10(SParkour parkour){
+	public static List<ParkourStats> getParkourRecordTop10(Parkour parkour){
 		try {
 			return client
 					.target("http://" + url + "/parkourStatses/search/getParkourRecordTopTen")
@@ -115,7 +115,7 @@ public class ParkourStatsService {
 		.get();
 	}
 	
-	public static void deleteParkourStatsOnParkour(SParkour parkour) {
+	public static void deleteParkourStatsOnParkour(Parkour parkour) {
 		client
 		.target("https://" + url + "/parkourStatses/search/deleteParkourStatsOnParkour")
 		.queryParam("name", parkour.getName())

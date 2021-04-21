@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import no.brannstrom.Parkour.handlers.MemoryHandler;
 import no.brannstrom.Parkour.handlers.ParkourHandler;
-import no.brannstrom.Parkour.model.SParkour;
+import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourPlayer;
 
 public class ParkourListener implements Listener {
@@ -27,7 +27,7 @@ public class ParkourListener implements Listener {
 					}
 					
 					ParkourPlayer parkourPlayer = new ParkourPlayer();
-					SParkour parkour = ParkourHandler.getParkourByStart(block.getLocation());
+					Parkour parkour = ParkourHandler.getParkourByStart(block.getLocation());
 					
 					parkourPlayer.setUuid(p.getUniqueId());
 					parkourPlayer.setParkour(parkour);
@@ -38,8 +38,8 @@ public class ParkourListener implements Listener {
 				} else if(ParkourHandler.isFinishPressurePlate(block)) {
 					if(MemoryHandler.parkourPlayers.containsKey(p.getUniqueId().toString())) {
 						ParkourPlayer parkourPlayer = MemoryHandler.parkourPlayers.get(p.getUniqueId().toString());
-						SParkour activeParkour = parkourPlayer.getParkour();
-						SParkour finishedParkour = ParkourHandler.getParkourByFinish(block.getLocation());
+						Parkour activeParkour = parkourPlayer.getParkour();
+						Parkour finishedParkour = ParkourHandler.getParkourByFinish(block.getLocation());
 						
 						if(activeParkour.getName().equalsIgnoreCase(finishedParkour.getName())) {
 							ParkourHandler.finishParkour(p, parkourPlayer);

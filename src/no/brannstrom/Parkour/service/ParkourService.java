@@ -15,7 +15,7 @@ import no.brannstrom.Parkour.model.Parkour;
 public class ParkourService {
 	
 	private static Client client = ClientBuilder.newClient();
-	private static String url = "127.0.0.1:8080";
+	private static String url = "127.0.0.1";
 	
 	public static Parkour update(Parkour parkour) {
 		Parkour response = client

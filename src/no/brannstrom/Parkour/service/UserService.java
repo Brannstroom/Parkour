@@ -16,7 +16,7 @@ import no.brannstrom.Parkour.model.User;
 public class UserService {
 
 	private static Client client = ClientBuilder.newClient();
-	private static String url = "127.0.0.1:8080";
+	private static String url = "127.0.0.1";
 
 	public static User update(User user) {
 		return client

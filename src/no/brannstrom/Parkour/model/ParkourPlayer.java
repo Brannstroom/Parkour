@@ -8,7 +8,7 @@ public class ParkourPlayer {
 	
 	Long startTime;
 
-	SParkour parkour;
+	Parkour parkour;
 	
 	public UUID getUuid() {
 		return uuid;
@@ -26,11 +26,11 @@ public class ParkourPlayer {
 		this.startTime = startTime;
 	}
 
-	public SParkour getParkour() {
+	public Parkour getParkour() {
 		return parkour;
 	}
 
-	public void setParkour(SParkour parkour) {
+	public void setParkour(Parkour parkour) {
 		this.parkour = parkour;
 	}
 }
