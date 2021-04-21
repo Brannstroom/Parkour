@@ -1,0 +1,29 @@
+### Parkour config
+
+## Permissions
+
+Admin Permission: 'parkour.admin'
+
+## Tanslatable messages
+
+Parkour Joined: '&aYou successfully joined the <parkour> &aparkour.'
+
+Parkour Created: '&aYou successfully created a parkour named <parkour>. Now use settp, setstart and setfinish to finish the parkour.'
+
+Set Parkour Join Location: '&aYou successfully set a join location for the <parkour> &aparkour.'
+
+Set Parkour Start Location: '&aYou successfully set a start location for the <parkour> &aparkour.'
+
+Set Parkour Finish Location: '&aYou successfully set a finish location for the <parkour> &aparkour.'
+
+Finished Parkour: '&aYou finished <parkour> with the time of <time>.'
+
+No Parkours: '&cNo parkours exist. If you are staff, set a parkour using /parkour create <name>.'
+
+Improved Time: '&aYou finished <parkour> in <time>, and improved your previous time by <improvement>.'
+
+Parkour Started Hotbar: '&aYou started the parkour'
+
+Parkour Finished Hotbar: '&aYou finished the parkour'
+
+Parkour Removed: '&aYou successfully removed <parkour>.'

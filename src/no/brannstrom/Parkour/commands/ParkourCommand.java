@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import no.brannstrom.Parkour.handlers.MessageHandler;
 import no.brannstrom.Parkour.handlers.ParkourHandler;
-import no.brannstrom.Parkour.service.ParkourService;
 
 public class ParkourCommand implements CommandExecutor {
 
@@ -18,23 +17,23 @@ public class ParkourCommand implements CommandExecutor {
 		
 		if(args.length == 1 && args[0].equalsIgnoreCase("list")) {
 			MessageHandler.sendList(p);
-		} else if(args.length == 1 && ParkourService.getParkour(args[0]) != null) {
-			MessageHandler.showParkourInfo(p, ParkourService.getParkour(args[0]));
+		} else if(args.length == 1 && ParkourHandler.getParkour(args[0]) != null) {
+			MessageHandler.showParkourInfo(p, ParkourHandler.getParkour(args[0]));
 		} else if(args.length == 2) {
-			if(args[0].equalsIgnoreCase("join") && ParkourService.getParkour(args[1]) != null) {
-				ParkourHandler.joinParkour(p, ParkourService.getParkour(args[1]));
-			} else if(args[0].equalsIgnoreCase("create") && ParkourService.getParkour(args[1]) == null) {
+			if(args[0].equalsIgnoreCase("join") && ParkourHandler.isParkour(args[1])) {
+				ParkourHandler.joinParkour(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("create") && ParkourHandler.getParkour(args[1]) == null) {
 				ParkourHandler.createParkour(p, args[1]);
-			} else if(args[0].equalsIgnoreCase("remove") && ParkourService.getParkour(args[1]) != null) {
-				ParkourHandler.removeParkour(p, ParkourService.getParkour(args[1]));
-			} else if(args[0].equalsIgnoreCase("setjoin") && ParkourService.getParkour(args[1]) != null) {
-				ParkourHandler.setJoinLocation(p, ParkourService.getParkour(args[1]));
-			} else if(args[0].equalsIgnoreCase("setstart") && ParkourService.getParkour(args[1]) != null) {
-				ParkourHandler.setStartLocation(p, ParkourService.getParkour(args[1]));
-			} else if(args[0].equalsIgnoreCase("setfinish") && ParkourService.getParkour(args[1]) != null) {
-				ParkourHandler.setFinishLocation(p, ParkourService.getParkour(args[1]));
-			} else if(args[0].equalsIgnoreCase("stats") && ParkourService.getParkour(args[1]) != null) {
-				ParkourHandler.showStats(p, ParkourService.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("remove") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.removeParkour(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("setjoin") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.setJoinLocation(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("setstart") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.setStartLocation(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("setfinish") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.setFinishLocation(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("stats") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.showStats(p, ParkourHandler.getParkour(args[1]));
 			} else {
 				MessageHandler.sendPlayerInfoMessage(p);
 			}
