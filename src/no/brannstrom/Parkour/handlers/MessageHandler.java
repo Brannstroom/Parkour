@@ -1,71 +1,56 @@
 package no.brannstrom.Parkour.handlers;
 
+import java.util.List;
+
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import net.md_5.bungee.api.ChatColor;
 import no.brannstrom.Parkour.model.Parkour;
-import no.brannstrom.Parkour.model.ParkourStats;
 
 public class MessageHandler {
 
 	public static void sendPlayerInfoMessage(Player p) {
-		p.sendMessage(ChatColor.BLUE + " ---- " + ChatColor.DARK_BLUE + "Parkour" +  ChatColor.BLUE + " ---- ");
-		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour list" + ChatColor.BLUE + "' to list all parkours");
-		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour join <name>" + ChatColor.BLUE + "' to join a parkour");
-		p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour stats <name>" + ChatColor.BLUE + "' to see stats on a parkour");
-		if(p.hasPermission(InfoKeeper.adminPermission)) {
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour <name>" + ChatColor.BLUE + "' to get info about a parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour create <name>" + ChatColor.BLUE + "' to create a parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour remove <name>" + ChatColor.BLUE + "' to remove a parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setjoin <name>" + ChatColor.BLUE + "' to set teleport location for parkour");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setstart <name>" + ChatColor.BLUE + "' to set a parkours start point");
-			p.sendMessage(ChatColor.BLUE + "Use: '" + ChatColor.DARK_BLUE + "/parkour setfinish <name>" + ChatColor.BLUE + "' to set a parkours finish point");
+		p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ Parkour }" + ChatColor.DARK_GRAY + "-------------");
+		p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour list" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se en liste over alle parkours");
+		p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour stats <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se stats på en parkour");
+		if(p.hasPermission("spillere.admin")) {
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se info om en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour join <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å joine en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour create <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å lage en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour remove <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å fjerne en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour setjoin <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å sette tp lokasjon på en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour setstart <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å sette start lokasjon på en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour setfinish <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å sette slutt lokasjon på en parkour");
 		}
+		p.sendMessage(ChatColor.DARK_GRAY + "--------------------------------------");
 	}
 	
 	public static void sendList(Player p) {
-		if(!MemoryHandler.parkours.isEmpty()) {
+		if(!ParkourHandler.getParkours().isEmpty()) {
 		String parkourList = "";
-		for(Parkour parkour : MemoryHandler.parkours) {
+		List<Parkour> parkours = ParkourHandler.getParkours();
+		for(Parkour parkour : parkours) {
 			parkourList += parkour.getName() + ", ";
 		}		
 		parkourList = parkourList.substring(0, parkourList.length() - 2);
 		
-		p.sendMessage("Parkour List");
+		p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ Parkours (" + parkours.size() + ") }" + ChatColor.DARK_GRAY + "-------------");
 		p.sendMessage(parkourList);
-		} else {
+		}
+		else {
 			p.sendMessage(InfoKeeper.noParkours);
 		}
 	}
 
 	public static void showParkourInfo(Player p, Parkour parkour) {
-		if(p.hasPermission(InfoKeeper.adminPermission)) {
-			p.sendMessage(parkourTime(p, parkour));
+		if(p.hasPermission("spillere.admin")) {
 			p.sendMessage("Name: " + parkour.getName());
-			p.sendMessage("Join Position: X:" + parkour.getJoinTeleport().getX() + " Y:" + parkour.getJoinTeleport().getY() + " Z:" + parkour.getJoinTeleport().getZ());
-			p.sendMessage("Start Position: X:" + parkour.getStartPoint().getX() + " Y:" + parkour.getStartPoint().getY() + " Z:" + parkour.getStartPoint().getZ());
-			p.sendMessage("Finish Position: X:" + parkour.getFinishPoint().getX() + " Y:" + parkour.getFinishPoint().getY() + " Z:" + parkour.getFinishPoint().getZ());
+			p.sendMessage("Join Position: X:" + parkour.getJoinLoc().getBlockX() + " Y:" + parkour.getJoinLoc().getBlockY() + " Z:" + parkour.getJoinLoc().getBlockZ());
+			p.sendMessage("Start Position: X:" + parkour.getStartLoc().getBlockX() + " Y:" + parkour.getStartLoc().getBlockY() + " Z:" + parkour.getStartLoc().getBlockZ());
+			p.sendMessage("Finish Position: X:" + parkour.getFinishLoc().getBlockX() + " Y:" + parkour.getFinishLoc().getBlockY() + " Z:" + parkour.getFinishLoc().getBlockZ());
 		} else {
-			p.sendMessage(parkourTime(p, parkour));
+			p.sendMessage(InfoKeeper.permission);
 		}
-	}
-	
-	public static String parkourTime(Player p, Parkour parkour) {
-		ParkourStats parkourStats = null;
-		String returning = "";
-		if(MemoryHandler.parkourStats.containsKey(p.getUniqueId().toString())) {
-			parkourStats = MemoryHandler.parkourStats.get(p.getUniqueId().toString());
-			
-			if(parkourStats.getNames().contains(parkour.getName())) {
-				returning = parkour.getName() + " : " + parkourStats.getTimes().get(parkourStats.getNames().indexOf(parkour.getName()));
-			} else {
-				returning = "You have not finished this parkour";
-			}
-		} else {
-			returning = "You have not finished any parkour";
-		}
-		
-		return returning;
 	}
 	
 }

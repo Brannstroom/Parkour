@@ -6,11 +6,11 @@ public class Parkour {
 
 	private String name;
 	
-	private Location joinTeleport;
+	private Location joinLoc;
 
-	private Location startPoint;
+	private Location startLoc;
 	
-	private Location finishPoint;
+	private Location finishLoc;
 
 	public String getName() {
 		return name;
@@ -20,29 +20,29 @@ public class Parkour {
 		this.name = name;
 	}
 
-	public Location getJoinTeleport() {
-		return joinTeleport;
+	public Location getJoinLoc() {
+		return joinLoc;
 	}
 
-	public void setJoinTeleport(Location joinTeleport) {
-		this.joinTeleport = joinTeleport;
+	public void setJoinLoc(Location joinLoc) {
+		this.joinLoc = joinLoc;
 	}
 
-	public Location getStartPoint() {
-		return startPoint;
+	public Location getStartLoc() {
+		return startLoc;
 	}
 
-	public void setStartPoint(Location startPoint) {
-		this.startPoint = startPoint;
+	public void setStartLoc(Location startLoc) {
+		this.startLoc = startLoc;
 	}
 
-	public Location getFinishPoint() {
-		return finishPoint;
+	public Location getFinishLoc() {
+		return finishLoc;
 	}
 
-	public void setFinishPoint(Location finishPoint) {
-		this.finishPoint = finishPoint;
+	public void setFinishLoc(Location finishLoc) {
+		this.finishLoc = finishLoc;
 	}
 
-
+	
 }
