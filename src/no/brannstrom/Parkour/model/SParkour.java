@@ -3,17 +3,19 @@ package no.brannstrom.Parkour.model;
 import java.util.Date;
 import java.util.UUID;
 
-public class Parkour {
+import org.bukkit.Location;
+
+public class SParkour {
 	
 	private UUID id;
 
 	private String name;
 	
-	private String coordinatesJoin;
+	Location joinLoc;
 	
-	private String coordinatesStart;
+	Location startLoc;
 	
-	private String coordinatesFinish;
+	Location finishLoc;
 	
 	private Date updatedAt;
 	
@@ -35,28 +37,28 @@ public class Parkour {
 		this.name = name;
 	}
 
-	public String getCoordinatesJoin() {
-		return coordinatesJoin;
+	public Location getJoinLoc() {
+		return joinLoc;
 	}
 
-	public void setCoordinatesJoin(String coordinatesJoin) {
-		this.coordinatesJoin = coordinatesJoin;
+	public void setJoinLoc(Location joinLoc) {
+		this.joinLoc = joinLoc;
 	}
 
-	public String getCoordinatesStart() {
-		return coordinatesStart;
+	public Location getStartLoc() {
+		return startLoc;
 	}
 
-	public void setCoordinatesStart(String coordinatesStart) {
-		this.coordinatesStart = coordinatesStart;
+	public void setStartLoc(Location startLoc) {
+		this.startLoc = startLoc;
 	}
 
-	public String getCoordinatesFinish() {
-		return coordinatesFinish;
+	public Location getFinishLoc() {
+		return finishLoc;
 	}
 
-	public void setCoordinatesFinish(String coordinatesFinish) {
-		this.coordinatesFinish = coordinatesFinish;
+	public void setFinishLoc(Location finishLoc) {
+		this.finishLoc = finishLoc;
 	}
 
 	public Date getUpdatedAt() {
@@ -74,5 +76,6 @@ public class Parkour {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
+	
 	
 }
