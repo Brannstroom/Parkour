@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -35,7 +36,7 @@ public class ParkourHandler {
 		if(MemoryHandler.parkourPlayers.containsKey(p.getUniqueId().toString())) {
 			MemoryHandler.parkourPlayers.remove(p.getUniqueId().toString());
 		}
-		
+
 		Parkour parkour = parkourPlayer.getParkour();
 		long time = System.currentTimeMillis()-parkourPlayer.getStartTime();
 
@@ -43,13 +44,13 @@ public class ParkourHandler {
 		if(parkourRecord != null) {
 			if(time < parkourRecord.getParkourTime()) {
 				User user = UserService.getUser(p.getUniqueId());
-//				MainHandler.broadcast(InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(parkourRecord.getParkourTime()-time))));
+				//				MainHandler.broadcast(InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(parkourRecord.getParkourTime()-time))));
 				MainHandler.broadcast("Hei 123");
 			}
 		}
 		else {
 			User user = UserService.getUser(p.getUniqueId());
-//			MainHandler.broadcast(InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
+			//			MainHandler.broadcast(InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
 			MainHandler.broadcast("Hei 1");
 		}
 
@@ -60,10 +61,16 @@ public class ParkourHandler {
 		ParkourStatsService.update(parkourStats);
 
 		ParkourStats previousBest = ParkourStatsService.getBestTimeOnParkour(parkourPlayer.getUuid(), parkour.getName());
-		if(parkourStats.getParkourTime() < previousBest.getParkourTime()) {
-			sendFinishMessageImproved(p, parkour, previousBest.getParkourTime(), time);
-		} else {
-			sendFinishMessageUnimproved(p,parkour,time);
+		if(previousBest != null) {
+			Bukkit.broadcastMessage("Tid:"  +parkourStats.getParkourTime() + " PB : " + previousBest.getParkourTime());
+			if(parkourStats.getParkourTime() < previousBest.getParkourTime()) {
+				sendFinishMessageImproved(p, parkour, previousBest.getParkourTime(), time);
+			} else {
+				sendFinishMessageUnimproved(p,parkour,time);
+			}
+		}
+		else {
+			sendFirstTimeFinish(p,parkour,time);
 		}
 
 		MainHandler.sendActionBar(p, InfoKeeper.parkourFinishedHotbar);
@@ -242,5 +249,9 @@ public class ParkourHandler {
 
 	public static void sendFinishMessageImproved(Player p, Parkour parkour, long previousTime, long newTime) {
 		p.sendMessage(InfoKeeper.improvedTime.replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(newTime))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(previousTime-newTime))));
+	}
+	
+	public static void sendFirstTimeFinish(Player p, Parkour parkour, long time) {
+		p.sendMessage(InfoKeeper.firstTimeFinishingParkour.replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
 	}
 }

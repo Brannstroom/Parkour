@@ -23,8 +23,9 @@ public class ParkourStatsService {
 	private static String url = "127.0.0.1:8080";
 	
 	public static ParkourStats update(ParkourStats parkourStats) {
+		cache.remove(parkourStats);
 		ParkourStats response = client
-				.target("http://" + url + "/parkours")
+				.target("http://" + url + "/parkourStatses")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(parkourStats, MediaType.APPLICATION_JSON), Response.class)
 				.readEntity(new GenericType<ParkourStats>() {});

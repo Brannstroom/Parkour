@@ -17,6 +17,7 @@ public class InfoKeeper {
 	public static String parkourRemoved = ChatColor.GREEN + "Du fjernet " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren.";
 	public static String newParkourRecord = "<player>" + ChatColor.GREEN + " satt ny rekord på " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren med en tid på " + ChatColor.RESET + "<time>" + ChatColor.GREEN + ", en forbedring på " + ChatColor.RESET + "<improvement>" + ChatColor.GREEN + ".";
 	public static String firstRecord = "<player>" + ChatColor.GREEN + " var den første til å fullføre " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren, og gjorde det med tiden " + ChatColor.RESET + "<time>" + ChatColor.GREEN + ".";
+	public static String firstTimeFinishingParkour = ChatColor.GREEN + "Du fullførte " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " for første gang med en tid på " + ChatColor.RESET + "<time>" + ChatColor.GREEN + ".";
 	public static String permission = ChatColor.RED + "Du har ikke tillatelse til å utføre denne kommandoen!";
 	public static String parkourDontExist = ChatColor.RED + "Parkouren " + ChatColor.DARK_RED + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.RED + " eksisterer ikke.";
 	public static String parkourAlreadyExist = ChatColor.RED + "Parkouren " + ChatColor.DARK_RED + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.RED + " eksisterer allerede.";
