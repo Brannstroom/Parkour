@@ -12,8 +12,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.bukkit.Bukkit;
-
 import no.brannstrom.Parkour.model.Parkour;
 
 public class ParkourService {
@@ -24,20 +22,12 @@ public class ParkourService {
 	private static String url = "127.0.0.1:8080";
 	
 	public static Parkour update(Parkour parkour) {
-		Bukkit.broadcastMessage("F LOC: " + parkour.getFinishLocation());
-		Bukkit.broadcastMessage("KL.1");
-		Bukkit.broadcastMessage("-----------------------");
-		Bukkit.broadcastMessage(parkour.getName());
-		Bukkit.broadcastMessage(parkour.getJoinLocation());
-		Bukkit.broadcastMessage(parkour.getStartLocation());
-		Bukkit.broadcastMessage(parkour.getFinishLocation());
-		Bukkit.broadcastMessage("-----------------------");
+		cache.remove(parkour);
 		Parkour response = client
 				.target("http://" + url + "/parkours")
 				.request(MediaType.APPLICATION_JSON)
 				.post(Entity.entity(parkour, MediaType.APPLICATION_JSON), Response.class)
 				.readEntity(new GenericType<Parkour>() {});
-		Bukkit.broadcastMessage("KL.2");
 		if (response != null && response.getUuid() == null) return null;
 		else return response;
 	}

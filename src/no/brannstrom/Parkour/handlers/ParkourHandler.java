@@ -1,11 +1,9 @@
 package no.brannstrom.Parkour.handlers;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,6 +12,7 @@ import net.md_5.bungee.api.ChatColor;
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourPlayer;
 import no.brannstrom.Parkour.model.ParkourStats;
+import no.brannstrom.Parkour.model.Serialize;
 import no.brannstrom.Parkour.model.User;
 import no.brannstrom.Parkour.service.ParkourService;
 import no.brannstrom.Parkour.service.ParkourStatsService;
@@ -23,7 +22,8 @@ public class ParkourHandler {
 
 	public static void joinParkour(Player p, Parkour parkour) {
 		p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getName()));
-		p.teleport(parkour.getJoinLoc());
+		Serialize serialize = new Serialize();
+		p.teleport(serialize.deserialize(parkour.getJoinLocation()));
 	}
 
 	public static void startParkour(Player p, ParkourPlayer parkourPlayer) {
@@ -35,24 +35,33 @@ public class ParkourHandler {
 		if(MemoryHandler.parkourPlayers.containsKey(p.getUniqueId().toString())) {
 			MemoryHandler.parkourPlayers.remove(p.getUniqueId().toString());
 		}
-
+		
+		Parkour parkour = parkourPlayer.getParkour();
 		long time = System.currentTimeMillis()-parkourPlayer.getStartTime();
 
 		ParkourStats parkourRecord = ParkourStatsService.getParkourRecord(parkourPlayer.getParkour());
-		if(time > parkourRecord.getTime()) {
-
+		if(parkourRecord != null) {
+			if(time < parkourRecord.getParkourTime()) {
+				User user = UserService.getUser(p.getUniqueId());
+//				MainHandler.broadcast(InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(parkourRecord.getParkourTime()-time))));
+				MainHandler.broadcast("Hei 123");
+			}
+		}
+		else {
+			User user = UserService.getUser(p.getUniqueId());
+//			MainHandler.broadcast(InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
+			MainHandler.broadcast("Hei 1");
 		}
 
-		Parkour parkour = parkourPlayer.getParkour();
 		ParkourStats parkourStats = new ParkourStats();
 		parkourStats.setUuid(parkourPlayer.getUuid());
 		parkourStats.setParkourName(parkour.getName());
-		parkourStats.setTime(time);
+		parkourStats.setParkourTime(time);
 		ParkourStatsService.update(parkourStats);
 
 		ParkourStats previousBest = ParkourStatsService.getBestTimeOnParkour(parkourPlayer.getUuid(), parkour.getName());
-		if(parkourStats.getTime() < previousBest.getTime()) {
-			sendFinishMessageImproved(p, parkour, previousBest.getTime(), time);
+		if(parkourStats.getParkourTime() < previousBest.getParkourTime()) {
+			sendFinishMessageImproved(p, parkour, previousBest.getParkourTime(), time);
 		} else {
 			sendFinishMessageUnimproved(p,parkour,time);
 		}
@@ -73,12 +82,12 @@ public class ParkourHandler {
 				User user = UserService.getUser(uuid);
 				String name = "anonym";
 				if (user != null) name = MainHandler.getPrefixName(user);
-				p.sendMessage(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getTime()) + ChatColor.GREEN + ".");
+				p.sendMessage(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 			}
 			Integer placement = ParkourStatsService.getParkourPlacement(p.getUniqueId(), parkour.getName());
 			if(placement > 10) {
 				ParkourStats stats = ParkourStatsService.getBestTimeOnParkour(p.getUniqueId(), parkour.getName());
-				p.sendMessage(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + MainHandler.getPrefixName(UserService.getUser(p.getUniqueId())) + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getTime()) + ChatColor.GREEN + ".");
+				p.sendMessage(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + MainHandler.getPrefixName(UserService.getUser(p.getUniqueId())) + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 			}
 		}
 		else {
@@ -97,24 +106,20 @@ public class ParkourHandler {
 	}
 
 	public static Parkour getParkour(String name) {
-		Bukkit.broadcastMessage("is null homie");
 		if(!ParkourService.getParkours().isEmpty()) {
-			Bukkit.broadcastMessage("Size: " + ParkourService.getParkours().size());
-			Bukkit.broadcastMessage("is null homie.1");
 			for(Parkour parkour : ParkourService.getParkours()) {
-				Bukkit.broadcastMessage("is null homie.2");
 				if(parkour.getName().equalsIgnoreCase(name)) {
 					return parkour;
 				}
 			}
 		}
-		Bukkit.broadcastMessage("is null homie.3");
 		return null;
 	}
 
 	public static Parkour getParkourByStart(Location bLoc) {
 		for(Parkour parkour : ParkourService.getParkours()) {
-			Location pLoc = parkour.getStartLoc();
+			Serialize serialize = new Serialize();
+			Location pLoc = serialize.deserialize(parkour.getStartLocation());
 
 			if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 				return parkour;
@@ -126,7 +131,8 @@ public class ParkourHandler {
 	public static Parkour getParkourByFinish(Location bLoc) {
 		if(!ParkourService.getParkours().isEmpty()) {
 			for(Parkour parkour : ParkourService.getParkours()) {
-				Location pLoc = parkour.getFinishLoc();
+				Serialize serialize = new Serialize();
+				Location pLoc = serialize.deserialize(parkour.getFinishLocation());
 
 				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 					return parkour;
@@ -137,22 +143,18 @@ public class ParkourHandler {
 	}
 
 	public static void createParkour(Player p, String name) {
-		Bukkit.broadcastMessage("3");
 		Parkour parkour = new Parkour();
 		parkour.setName(name);
-		Bukkit.broadcastMessage("4");
 		Location loc = p.getLocation();
-		Bukkit.broadcastMessage("4.1");
-		parkour.setJoinLocation(loc);
-		Bukkit.broadcastMessage("4.2");
-		parkour.setStartLocation(loc);
-		Bukkit.broadcastMessage("4.3");
-		parkour.setFinishLocation(loc);
-		
-		Bukkit.broadcastMessage("5"); 
+
+		Serialize serialize = new Serialize();
+		String location = serialize.serialize(loc);
+
+		parkour.setJoinLocation(location);
+		parkour.setStartLocation(location);
+		parkour.setFinishLocation(location);
 
 		ParkourService.update(parkour);
-		Bukkit.broadcastMessage("6");
 
 		p.sendMessage(InfoKeeper.parkourCreated.replaceAll("<parkour>", name));
 	}
@@ -169,7 +171,9 @@ public class ParkourHandler {
 		if(!ParkourService.getParkours().isEmpty()) {
 			for(Parkour parkour : ParkourService.getParkours()) {
 				Location bLoc = b.getLocation();
-				Location pLoc = parkour.getStartLoc();
+
+				Serialize serialize = new Serialize();
+				Location pLoc = serialize.deserialize(parkour.getStartLocation());
 
 				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 					isStartPressurePlate = true;
@@ -184,7 +188,9 @@ public class ParkourHandler {
 		if(!ParkourService.getParkours().isEmpty()) {
 			for(Parkour parkour : ParkourService.getParkours()) {
 				Location bLoc = b.getLocation();
-				Location pLoc = parkour.getFinishLoc();
+
+				Serialize serialize = new Serialize();
+				Location pLoc = serialize.deserialize(parkour.getFinishLocation());
 
 				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 					isFinishPressurePlate = true;
@@ -196,7 +202,8 @@ public class ParkourHandler {
 
 	public static void setJoinLocation(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
-			parkour.setJoinLocation(p.getLocation());
+			Serialize serialize = new Serialize();
+			parkour.setJoinLocation(serialize.serialize(p.getLocation()));
 			ParkourService.update(parkour);
 			p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("<parkour>", parkour.getName()));
 		}
@@ -207,7 +214,8 @@ public class ParkourHandler {
 
 	public static void setStartLocation(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
-			parkour.setStartLocation(p.getLocation());
+			Serialize serialize = new Serialize();
+			parkour.setStartLocation(serialize.serialize(p.getLocation()));
 			ParkourService.update(parkour);
 			p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("<parkour>", parkour.getName()));
 		}
@@ -218,7 +226,8 @@ public class ParkourHandler {
 
 	public static void setFinishLocation(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
-			parkour.setFinishLocation(p.getLocation());
+			Serialize serialize = new Serialize();
+			parkour.setFinishLocation(serialize.serialize(p.getLocation()));
 			ParkourService.update(parkour);
 			p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("<parkour>", parkour.getName()));
 		}

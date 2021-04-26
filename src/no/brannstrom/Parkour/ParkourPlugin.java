@@ -29,6 +29,8 @@ public class ParkourPlugin extends JavaPlugin {
 		instance = this;
 		loadListeners();
 		loadCommands();
+		
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "spillere:bungee");
 	}
 
 	public void onDisable() {

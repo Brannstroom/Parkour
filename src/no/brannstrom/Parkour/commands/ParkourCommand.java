@@ -1,6 +1,5 @@
 package no.brannstrom.Parkour.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,9 +23,7 @@ public class ParkourCommand implements CommandExecutor {
 			if(args[0].equalsIgnoreCase("join") && ParkourHandler.isParkour(args[1])) {
 				ParkourHandler.joinParkour(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("create") && ParkourHandler.getParkour(args[1]) == null) {
-				Bukkit.broadcastMessage("1");
 				ParkourHandler.createParkour(p, args[1]);
-				Bukkit.broadcastMessage("2");
 			} else if(args[0].equalsIgnoreCase("remove") && ParkourHandler.getParkour(args[1]) != null) {
 				ParkourHandler.removeParkour(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("setjoin") && ParkourHandler.getParkour(args[1]) != null) {

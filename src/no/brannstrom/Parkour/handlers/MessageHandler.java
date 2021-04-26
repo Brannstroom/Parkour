@@ -3,9 +3,11 @@ package no.brannstrom.Parkour.handlers;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import no.brannstrom.Parkour.model.Parkour;
+import no.brannstrom.Parkour.model.Serialize;
 import no.brannstrom.Parkour.service.ParkourService;
 
 public class MessageHandler {
@@ -48,9 +50,14 @@ public class MessageHandler {
 	public static void showParkourInfo(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
 			p.sendMessage("Name: " + parkour.getName());
-			p.sendMessage("Join Position: X:" + parkour.getJoinLoc().getBlockX() + " Y:" + parkour.getJoinLoc().getBlockY() + " Z:" + parkour.getJoinLoc().getBlockZ());
-			p.sendMessage("Start Position: X:" + parkour.getStartLoc().getBlockX() + " Y:" + parkour.getStartLoc().getBlockY() + " Z:" + parkour.getStartLoc().getBlockZ());
-			p.sendMessage("Finish Position: X:" + parkour.getFinishLoc().getBlockX() + " Y:" + parkour.getFinishLoc().getBlockY() + " Z:" + parkour.getFinishLoc().getBlockZ());
+			Serialize serialize = new Serialize();
+			Location joinLocation = serialize.deserialize(parkour.getJoinLocation());
+			Location startLocation = serialize.deserialize(parkour.getStartLocation());
+			Location finishLocation = serialize.deserialize(parkour.getFinishLocation());
+			
+			p.sendMessage("Join Position: X:" + joinLocation.getBlockX() + " Y:" + joinLocation.getBlockY() + " Z:" + joinLocation.getBlockZ());
+			p.sendMessage("Start Position: X:" + startLocation.getBlockX() + " Y:" + startLocation.getBlockY() + " Z:" + startLocation.getBlockZ());
+			p.sendMessage("Finish Position: X:" + finishLocation.getBlockX() + " Y:" + finishLocation.getBlockY() + " Z:" + finishLocation.getBlockZ());
 		} else {
 			p.sendMessage(InfoKeeper.permission);
 		}

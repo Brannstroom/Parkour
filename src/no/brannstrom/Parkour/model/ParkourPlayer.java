@@ -2,35 +2,20 @@ package no.brannstrom.Parkour.model;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter @Setter @EqualsAndHashCode(of = {"uuid"})
 public class ParkourPlayer {
 
-	UUID uuid;
+	private UUID uuid;
 	
-	Long startTime;
+	private Long startTime;
 
-	Parkour parkour;
+	private Parkour parkour;
 	
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
-	}
-
-	public Long getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Long startTime) {
-		this.startTime = startTime;
-	}
-
-	public Parkour getParkour() {
-		return parkour;
-	}
-
-	public void setParkour(Parkour parkour) {
-		this.parkour = parkour;
-	}
 }

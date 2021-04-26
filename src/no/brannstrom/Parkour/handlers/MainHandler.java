@@ -1,13 +1,20 @@
 package no.brannstrom.Parkour.handlers;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import no.brannstrom.Parkour.ParkourPlugin;
 import no.brannstrom.Parkour.model.User;
 
 public class MainHandler {
@@ -18,6 +25,18 @@ public class MainHandler {
 	
 	public static String formatTime(long millis) {
 		return new SimpleDateFormat("mm:ss:SSS").format(new Date(millis));
+	}
+	
+	public static void broadcast(String string) {
+		ByteArrayDataOutput out = ByteStreams.newDataOutput();
+		out.writeUTF("broadcast");
+		out.writeUTF(string);
+		List<Player> players = new ArrayList<>();
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			players.add(player);
+		}
+		Player p = players.get(0);
+		p.sendPluginMessage(ParkourPlugin.instance, "spillere:bungee", out.toByteArray());
 	}
 	
 	public static String getPrefixName(User user) {
