@@ -2,16 +2,12 @@ package no.brannstrom.Parkour.handlers;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
@@ -20,6 +16,7 @@ import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourPlayer;
 import no.brannstrom.Parkour.model.ParkourStats;
 import no.brannstrom.Parkour.model.User;
+import no.brannstrom.Parkour.service.ParkourService;
 import no.brannstrom.Parkour.service.ParkourStatsService;
 import no.brannstrom.Parkour.service.UserService;
 
@@ -27,7 +24,7 @@ public class ParkourHandler {
 
 	public static void joinParkour(Player p, Parkour parkour) {
 		p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getName()));
-		p.teleport(parkour.getJoinLoc());
+		p.teleport(parkour.getJoinLocation());
 	}
 
 	public static void startParkour(Player p, ParkourPlayer parkourPlayer) {
@@ -92,7 +89,7 @@ public class ParkourHandler {
 
 	public static boolean isParkour(String name) {
 		boolean isParkour = false;
-		for(Parkour parkour : getParkours()) {
+		for(Parkour parkour : ParkourService.getParkours()) {
 			if(parkour.getName().equalsIgnoreCase(name)) {
 				isParkour = true;
 			}
@@ -101,8 +98,8 @@ public class ParkourHandler {
 	}
 
 	public static Parkour getParkour(String name) {
-		if(!getParkours().isEmpty()) {
-			for(Parkour parkour : getParkours()) {
+		if(!ParkourService.getParkours().isEmpty()) {
+			for(Parkour parkour : ParkourService.getParkours()) {
 				if(parkour.getName().equalsIgnoreCase(name)) {
 					return parkour;
 				}
@@ -111,25 +108,9 @@ public class ParkourHandler {
 		return null;
 	}
 
-	public static List<Parkour> getParkours() {
-
-		List<Parkour> parkours = new ArrayList<>();
-
-		Configuration config = ParkourPlugin.instance.parkours;
-		ConfigurationSection section = config.getConfigurationSection("parkours");
-		if(!section.getKeys(false).isEmpty()) {
-			for(String key : section.getKeys(false)) {
-				Parkour parkour = config.getObject("parkours." + key, Parkour.class);
-				parkours.add(parkour);
-			}
-		}
-
-		return parkours;
-	}
-
 	public static Parkour getParkourByStart(Location bLoc) {
-		for(Parkour parkour : getParkours()) {
-			Location pLoc = parkour.getStartLoc();
+		for(Parkour parkour : ParkourService.getParkours()) {
+			Location pLoc = parkour.getStartLocation();
 
 			if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 				return parkour;
@@ -139,54 +120,56 @@ public class ParkourHandler {
 	}
 
 	public static Parkour getParkourByFinish(Location bLoc) {
-		for(Parkour parkour : getParkours()) {
-			Location pLoc = parkour.getFinishLoc();
+		if(!ParkourService.getParkours().isEmpty()) {
+			for(Parkour parkour : ParkourService.getParkours()) {
+				Location pLoc = parkour.getFinishLocation();
 
-			if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
-				return parkour;
+				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
+					return parkour;
+				}
 			}
 		}
 		return null;
 	}
 
 	public static void createParkour(Player p, String name) {
+		Bukkit.broadcastMessage("3");
 		Parkour parkour = new Parkour();
 		parkour.setName(name);
+		Bukkit.broadcastMessage("4");
 		Location loc = p.getLocation();
-		parkour.setJoinLoc(loc);
-		parkour.setStartLoc(loc);
-		parkour.setFinishLoc(loc);
+		Bukkit.broadcastMessage("4.1");
+		parkour.setJoinLocation(loc);
+		Bukkit.broadcastMessage("4.2");
+		parkour.setStartLocation(loc);
+		Bukkit.broadcastMessage("4.3");
+		parkour.setFinishLocation(loc);
+		
+		Bukkit.broadcastMessage("5"); 
 
-		ParkourPlugin.instance.parkours.set("parkours." + name, parkour);
-		try {
-			ParkourPlugin.instance.parkours.save(ParkourPlugin.instance.parkoursFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ParkourService.update(parkour);
+		Bukkit.broadcastMessage("6");
 
 		p.sendMessage(InfoKeeper.parkourCreated.replaceAll("<parkour>", name));
 	}
 
 	public static void removeParkour(Player p, Parkour parkour) {
 
-		ParkourPlugin.instance.parkours.set("parkours." + parkour.getName(), null);
-		try {
-			ParkourPlugin.instance.parkours.save(ParkourPlugin.instance.parkoursFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ParkourService.deleteParkour(parkour);
 
 		p.sendMessage(InfoKeeper.parkourRemoved.replaceAll("<parkour>", parkour.getName()));
 	}
 
 	public static boolean isStartPressurePlate(Block b) {
 		boolean isStartPressurePlate = false;
-		for(Parkour parkour : getParkours()) {
-			Location bLoc = b.getLocation();
-			Location pLoc = parkour.getStartLoc();
+		if(!ParkourService.getParkours().isEmpty()) {
+			for(Parkour parkour : ParkourService.getParkours()) {
+				Location bLoc = b.getLocation();
+				Location pLoc = parkour.getStartLocation();
 
-			if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
-				isStartPressurePlate = true;
+				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
+					isStartPressurePlate = true;
+				}
 			}
 		}
 		return isStartPressurePlate;
@@ -194,12 +177,14 @@ public class ParkourHandler {
 
 	public static boolean isFinishPressurePlate(Block b) {
 		boolean isFinishPressurePlate = false;
-		for(Parkour parkour : getParkours()) {
-			Location bLoc = b.getLocation();
-			Location pLoc = parkour.getFinishLoc();
+		if(!ParkourService.getParkours().isEmpty()) {
+			for(Parkour parkour : ParkourService.getParkours()) {
+				Location bLoc = b.getLocation();
+				Location pLoc = parkour.getFinishLocation();
 
-			if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
-				isFinishPressurePlate = true;
+				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
+					isFinishPressurePlate = true;
+				}
 			}
 		}
 		return isFinishPressurePlate;
@@ -207,13 +192,8 @@ public class ParkourHandler {
 
 	public static void setJoinLocation(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
-			parkour.setJoinLoc(p.getLocation());
-			ParkourPlugin.instance.parkours.set("parkours." + parkour.getName(), parkour);
-			try {
-				ParkourPlugin.instance.parkours.save(ParkourPlugin.instance.parkoursFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			parkour.setJoinLocation(p.getLocation());
+			ParkourService.update(parkour);
 			p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("<parkour>", parkour.getName()));
 		}
 		else {
@@ -223,14 +203,8 @@ public class ParkourHandler {
 
 	public static void setStartLocation(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
-			parkour.setStartLoc(p.getLocation());
-			ParkourPlugin.instance.parkours.set("parkours." + parkour.getName(), parkour);
-			try {
-				ParkourPlugin.instance.parkours.save(ParkourPlugin.instance.parkoursFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			parkour.setStartLocation(p.getLocation());
+			ParkourService.update(parkour);
 			p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("<parkour>", parkour.getName()));
 		}
 		else {
@@ -240,14 +214,8 @@ public class ParkourHandler {
 
 	public static void setFinishLocation(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
-			parkour.setFinishLoc(p.getLocation());
-			ParkourPlugin.instance.parkours.set("parkours." + parkour.getName(), parkour);
-			try {
-				ParkourPlugin.instance.parkours.save(ParkourPlugin.instance.parkoursFile);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
+			parkour.setFinishLocation(p.getLocation());
+			ParkourService.update(parkour);
 			p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("<parkour>", parkour.getName()));
 		}
 		else {

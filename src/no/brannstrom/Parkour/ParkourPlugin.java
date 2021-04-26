@@ -1,22 +1,15 @@
 package no.brannstrom.Parkour;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,7 +17,6 @@ import com.google.common.collect.Lists;
 
 import no.brannstrom.Parkour.commands.ParkourCommand;
 import no.brannstrom.Parkour.listeners.ParkourListener;
-import no.brannstrom.Parkour.model.Parkour;
 
 public class ParkourPlugin extends JavaPlugin {
 	
@@ -37,9 +29,6 @@ public class ParkourPlugin extends JavaPlugin {
 		instance = this;
 		loadListeners();
 		loadCommands();
-
-		createParkourConfig();
-		
 	}
 
 	public void onDisable() {
@@ -84,35 +73,4 @@ public class ParkourPlugin extends JavaPlugin {
 			return null;
 		}
 	}	
-	
-	private void createParkourConfig() {
-		parkoursFile = new File(getDataFolder(), "parkours.yml");
-		if(!parkoursFile.exists()) {
-			parkoursFile.getParentFile().mkdirs();
-			saveResource("parkours.yml", false);
-		}
-
-		parkours = new YamlConfiguration();
-		try {
-			parkours.load(parkoursFile);
-		} catch (IOException | InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
-		
-		Parkour parkour = new Parkour();
-		parkour.setName("Server");
-		Location loc1 = new Location(Bukkit.getWorlds().get(0), 0, 100, 0);
-		Location loc2 = new Location(Bukkit.getWorlds().get(0), 1, 100, 1);
-		Location loc3 = new Location(Bukkit.getWorlds().get(0), 2, 100, 2);
-		parkour.setJoinLoc(loc1);
-		parkour.setStartLoc(loc2);
-		parkour.setFinishLoc(loc3);
-
-		ParkourPlugin.instance.parkours.set("parkours.Server", parkour);
-		try {
-			ParkourPlugin.instance.parkours.save(parkoursFile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

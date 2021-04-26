@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import no.brannstrom.Parkour.model.Parkour;
+import no.brannstrom.Parkour.service.ParkourService;
 
 public class MessageHandler {
 
@@ -24,33 +25,35 @@ public class MessageHandler {
 		}
 		p.sendMessage(ChatColor.DARK_GRAY + "--------------------------------------");
 	}
-	
+
 	public static void sendList(Player p) {
-		if(!ParkourHandler.getParkours().isEmpty()) {
-		String parkourList = "";
-		List<Parkour> parkours = ParkourHandler.getParkours();
-		for(Parkour parkour : parkours) {
-			parkourList += parkour.getName() + ", ";
-		}		
-		parkourList = parkourList.substring(0, parkourList.length() - 2);
-		
-		p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ Parkours (" + parkours.size() + ") }" + ChatColor.DARK_GRAY + "-------------");
-		p.sendMessage(parkourList);
+		if(!ParkourService.getParkours().isEmpty()) {
+			String parkourList = "";
+			List<Parkour> parkours = ParkourService.getParkours();
+			for(Parkour parkour : parkours) {
+				parkourList += parkour.getName() + ", ";
+			}
+			parkourList = parkourList.substring(0, parkourList.length() - 2);
+
+			p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ Parkours (" + parkours.size() + ") }" + ChatColor.DARK_GRAY + "-------------");
+			p.sendMessage(parkourList);
+
 		}
 		else {
-			p.sendMessage(InfoKeeper.noParkours);
+			p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ Parkours }" + ChatColor.DARK_GRAY + "-------------");
+			p.sendMessage(ChatColor.RED + "Det er enda ikke laget noen parkours.");
 		}
 	}
 
 	public static void showParkourInfo(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
 			p.sendMessage("Name: " + parkour.getName());
-			p.sendMessage("Join Position: X:" + parkour.getJoinLoc().getBlockX() + " Y:" + parkour.getJoinLoc().getBlockY() + " Z:" + parkour.getJoinLoc().getBlockZ());
-			p.sendMessage("Start Position: X:" + parkour.getStartLoc().getBlockX() + " Y:" + parkour.getStartLoc().getBlockY() + " Z:" + parkour.getStartLoc().getBlockZ());
-			p.sendMessage("Finish Position: X:" + parkour.getFinishLoc().getBlockX() + " Y:" + parkour.getFinishLoc().getBlockY() + " Z:" + parkour.getFinishLoc().getBlockZ());
+			p.sendMessage("Join Position: X:" + parkour.getJoinLocation().getBlockX() + " Y:" + parkour.getJoinLocation().getBlockY() + " Z:" + parkour.getJoinLocation().getBlockZ());
+			p.sendMessage("Start Position: X:" + parkour.getStartLocation().getBlockX() + " Y:" + parkour.getStartLocation().getBlockY() + " Z:" + parkour.getStartLocation().getBlockZ());
+			p.sendMessage("Finish Position: X:" + parkour.getFinishLocation().getBlockX() + " Y:" + parkour.getFinishLocation().getBlockY() + " Z:" + parkour.getFinishLocation().getBlockZ());
 		} else {
 			p.sendMessage(InfoKeeper.permission);
 		}
 	}
-	
+
 }
