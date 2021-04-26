@@ -26,6 +26,12 @@ public class ParkourService {
 	public static Parkour update(Parkour parkour) {
 		Bukkit.broadcastMessage("F LOC: " + parkour.getFinishLocation());
 		Bukkit.broadcastMessage("KL.1");
+		Bukkit.broadcastMessage("-----------------------");
+		Bukkit.broadcastMessage(parkour.getName());
+		Bukkit.broadcastMessage(parkour.getJoinLocation());
+		Bukkit.broadcastMessage(parkour.getStartLocation());
+		Bukkit.broadcastMessage(parkour.getFinishLocation());
+		Bukkit.broadcastMessage("-----------------------");
 		Parkour response = client
 				.target("http://" + url + "/parkours")
 				.request(MediaType.APPLICATION_JSON)

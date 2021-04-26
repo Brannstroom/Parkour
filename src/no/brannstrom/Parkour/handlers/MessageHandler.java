@@ -48,9 +48,9 @@ public class MessageHandler {
 	public static void showParkourInfo(Player p, Parkour parkour) {
 		if(p.hasPermission("spillere.admin")) {
 			p.sendMessage("Name: " + parkour.getName());
-			p.sendMessage("Join Position: X:" + parkour.getJoinLocation().getBlockX() + " Y:" + parkour.getJoinLocation().getBlockY() + " Z:" + parkour.getJoinLocation().getBlockZ());
-			p.sendMessage("Start Position: X:" + parkour.getStartLocation().getBlockX() + " Y:" + parkour.getStartLocation().getBlockY() + " Z:" + parkour.getStartLocation().getBlockZ());
-			p.sendMessage("Finish Position: X:" + parkour.getFinishLocation().getBlockX() + " Y:" + parkour.getFinishLocation().getBlockY() + " Z:" + parkour.getFinishLocation().getBlockZ());
+			p.sendMessage("Join Position: X:" + parkour.getJoinLoc().getBlockX() + " Y:" + parkour.getJoinLoc().getBlockY() + " Z:" + parkour.getJoinLoc().getBlockZ());
+			p.sendMessage("Start Position: X:" + parkour.getStartLoc().getBlockX() + " Y:" + parkour.getStartLoc().getBlockY() + " Z:" + parkour.getStartLoc().getBlockZ());
+			p.sendMessage("Finish Position: X:" + parkour.getFinishLoc().getBlockX() + " Y:" + parkour.getFinishLoc().getBlockY() + " Z:" + parkour.getFinishLoc().getBlockZ());
 		} else {
 			p.sendMessage(InfoKeeper.permission);
 		}

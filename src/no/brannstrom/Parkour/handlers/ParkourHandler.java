@@ -11,7 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
-import no.brannstrom.Parkour.ParkourPlugin;
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourPlayer;
 import no.brannstrom.Parkour.model.ParkourStats;
@@ -24,7 +23,7 @@ public class ParkourHandler {
 
 	public static void joinParkour(Player p, Parkour parkour) {
 		p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getName()));
-		p.teleport(parkour.getJoinLocation());
+		p.teleport(parkour.getJoinLoc());
 	}
 
 	public static void startParkour(Player p, ParkourPlayer parkourPlayer) {
@@ -98,19 +97,24 @@ public class ParkourHandler {
 	}
 
 	public static Parkour getParkour(String name) {
+		Bukkit.broadcastMessage("is null homie");
 		if(!ParkourService.getParkours().isEmpty()) {
+			Bukkit.broadcastMessage("Size: " + ParkourService.getParkours().size());
+			Bukkit.broadcastMessage("is null homie.1");
 			for(Parkour parkour : ParkourService.getParkours()) {
+				Bukkit.broadcastMessage("is null homie.2");
 				if(parkour.getName().equalsIgnoreCase(name)) {
 					return parkour;
 				}
 			}
 		}
+		Bukkit.broadcastMessage("is null homie.3");
 		return null;
 	}
 
 	public static Parkour getParkourByStart(Location bLoc) {
 		for(Parkour parkour : ParkourService.getParkours()) {
-			Location pLoc = parkour.getStartLocation();
+			Location pLoc = parkour.getStartLoc();
 
 			if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 				return parkour;
@@ -122,7 +126,7 @@ public class ParkourHandler {
 	public static Parkour getParkourByFinish(Location bLoc) {
 		if(!ParkourService.getParkours().isEmpty()) {
 			for(Parkour parkour : ParkourService.getParkours()) {
-				Location pLoc = parkour.getFinishLocation();
+				Location pLoc = parkour.getFinishLoc();
 
 				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 					return parkour;
@@ -165,7 +169,7 @@ public class ParkourHandler {
 		if(!ParkourService.getParkours().isEmpty()) {
 			for(Parkour parkour : ParkourService.getParkours()) {
 				Location bLoc = b.getLocation();
-				Location pLoc = parkour.getStartLocation();
+				Location pLoc = parkour.getStartLoc();
 
 				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 					isStartPressurePlate = true;
@@ -180,7 +184,7 @@ public class ParkourHandler {
 		if(!ParkourService.getParkours().isEmpty()) {
 			for(Parkour parkour : ParkourService.getParkours()) {
 				Location bLoc = b.getLocation();
-				Location pLoc = parkour.getFinishLocation();
+				Location pLoc = parkour.getFinishLoc();
 
 				if(bLoc.getBlockX() == pLoc.getBlockX() && bLoc.getBlockY() == pLoc.getBlockY() && bLoc.getBlockZ() == pLoc.getBlockZ()) {
 					isFinishPressurePlate = true;

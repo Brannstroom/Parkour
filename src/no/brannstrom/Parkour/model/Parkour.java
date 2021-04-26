@@ -47,7 +47,11 @@ public class Parkour {
 		this.name = name;
 	}
 
-	public Location getJoinLocation() {
+	public String getJoinLocation() {
+		return joinLocation;
+	}
+	
+	public Location getJoinLoc() {
 		Serialize serialize = new Serialize();
 		Location location = serialize.deserialized(joinLocation);
 		return location;
@@ -57,12 +61,16 @@ public class Parkour {
 		Serialize serialize = new Serialize();
 		Bukkit.broadcastMessage("Location:" + joinLocation.toString());
 		String location = serialize.serialize(joinLocation);
-		Bukkit.broadcastMessage("Serialized Location: " + location);
+		Bukkit.broadcastMessage("Serialized Location: " + location); 
 		this.joinLocation = location;
 		
 	}
+	
+	public String getStartLocation() {
+		return startLocation;
+	}
 
-	public Location getStartLocation() {
+	public Location getStartLoc() {
 		Serialize serialize = new Serialize();
 		Location location = serialize.deserialized(startLocation);
 		return location;
@@ -71,10 +79,14 @@ public class Parkour {
 	public void setStartLocation(Location startLocation) {
 		Serialize serialize = new Serialize();
 		String location = serialize.serialize(startLocation);
-		this.joinLocation = location;
+		this.startLocation = location;
 	}
 
-	public Location getFinishLocation() {
+	public String getFinishLocation() {
+		return finishLocation;
+	}
+	
+	public Location getFinishLoc() {
 		Bukkit.broadcastMessage("ADK.1");
 		Serialize serialize = new Serialize();
 		Bukkit.broadcastMessage("ADK.2");
@@ -86,7 +98,7 @@ public class Parkour {
 	public void setFinishLocation(Location finishLocation) {
 		Serialize serialize = new Serialize();
 		String location = serialize.serialize(finishLocation);
-		this.joinLocation = location;
+		this.finishLocation = location;
 	}
 
 	public Date getUpdatedAt() {
