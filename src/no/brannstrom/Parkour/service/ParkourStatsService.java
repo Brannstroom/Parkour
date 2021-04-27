@@ -50,11 +50,11 @@ public class ParkourStatsService {
 		});
 	}
 	
-	public static ParkourStats getBestTimeOnParkour(UUID uuid, String name) {
+	public static ParkourStats getPersonalBest(UUID uuid, String name) {
 		ParkourStats response = client
-				.target("http://" + url + "/parkourStatses/search/getBestTimeOnParkour")
+				.target("http://" + url + "/parkourStatses/search/findFirstByParkourNameAndUuidOrderByParkourTimeDesc")
 				.queryParam("uuid", uuid)
-				.queryParam("name", name)
+				.queryParam("parkourName", name)
 				.request(MediaType.APPLICATION_JSON)
 				.get(Response.class)
 				.readEntity(new GenericType<ParkourStats>() {});
@@ -64,8 +64,8 @@ public class ParkourStatsService {
 	
 	public static ParkourStats getParkourRecord(Parkour parkour) {
 		ParkourStats response = client
-				.target("http://" + url + "/parkourStatses/search/getParkourRecord")
-				.queryParam("name", parkour.getName())
+				.target("http://" + url + "/parkourStatses/search/findFirstByParkourNameOrderByParkourTimeDesc")
+				.queryParam("parkourName", parkour.getName())
 				.request(MediaType.APPLICATION_JSON)
 				.get(Response.class)
 				.readEntity(new GenericType<ParkourStats>() {});
@@ -73,11 +73,11 @@ public class ParkourStatsService {
 		else return response;
 	}
 	
-	public static List<ParkourStats> getParkourRecordTop10(Parkour parkour){
+	public static List<ParkourStats> getTop10(Parkour parkour){
 		try {
 			return client
-					.target("http://" + url + "/parkourStatses/search/getParkourRecordTopTen")
-					.queryParam("name", parkour.getName())
+					.target("http://" + url + "/parkourStatses/search/findTop10ByParkourNameOrderByParkourTimeAsc")
+					.queryParam("parkourName", parkour.getName())
 					.request(MediaType.APPLICATION_JSON)
 					.get(Response.class)
 					.readEntity(new GenericType<List<ParkourStats>>() {});
