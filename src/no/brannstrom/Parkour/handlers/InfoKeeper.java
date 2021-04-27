@@ -11,7 +11,7 @@ public class InfoKeeper {
 	public static String setParkourFinishLocation = ChatColor.GREEN + "Du satt slutt lokasjon for " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren.";
 	public static String finishedParkour = ChatColor.GREEN + "Du fullførte " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " med tiden " + ChatColor.DARK_GREEN + "<time>" + ChatColor.GREEN + ".";
 	public static String noParkours = ChatColor.GREEN + "Ingen parkour eksisterer. Lag en parkour med /parkour create <navn>.";
-	public static String improvedTime = ChatColor.GREEN + "Du fullførte " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " med tiden " + ChatColor.RESET + "<time>" + ChatColor.GREEN + ", en forbedring på " + ChatColor.RESET + "<improvement>" + ChatColor.GREEN + ".";
+	public static String improvedTime = ChatColor.GREEN + "Du fullførte " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " med tiden " + ChatColor.RESET + "<time>" + ChatColor.GREEN + " og forbedret din forrige rekord med " + ChatColor.RESET + "<improvement>" + ChatColor.GREEN + ".";
 	public static String parkourStartedHotbar = ChatColor.GREEN + "Du startet parkouren";
 	public static String parkourFinishedHotbar = ChatColor.GREEN +  "Du fullførte parkouren";
 	public static String parkourRemoved = ChatColor.GREEN + "Du fjernet " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren.";

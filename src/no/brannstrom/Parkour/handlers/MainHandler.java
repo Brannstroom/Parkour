@@ -30,7 +30,7 @@ public class MainHandler {
 	public static void broadcast(String string) {
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("broadcast");
-		out.writeUTF(string);
+		out.writeUTF("hei");
 		List<Player> players = new ArrayList<>();
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			players.add(player);
