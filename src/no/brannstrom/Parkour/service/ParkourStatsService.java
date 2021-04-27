@@ -12,8 +12,6 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.bukkit.Bukkit;
-
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourStats;
 
@@ -53,7 +51,6 @@ public class ParkourStatsService {
 	}
 	
 	public static ParkourStats getPersonalBest(UUID uuid, String name) {
-		Bukkit.broadcastMessage("Hm:" + uuid.toString() + " | Name: " + name);
 		ParkourStats response = client
 				.target("http://" + url + "/parkourStatses/search/findFirstByParkourNameAndUuidOrderByParkourTimeAsc")
 				.queryParam("uuid", uuid)
@@ -66,7 +63,6 @@ public class ParkourStatsService {
 	}
 	
 	public static ParkourStats getParkourRecord(Parkour parkour) {
-		Bukkit.broadcastMessage("Par: " + parkour.getName());
 		ParkourStats response = client
 				.target("http://" + url + "/parkourStatses/search/findFirstByParkourNameOrderByParkourTimeAsc")
 				.queryParam("parkourName", parkour.getName())
