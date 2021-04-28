@@ -92,8 +92,8 @@ public class ParkourStatsService {
 		try {
 			return client
 					.target("http://" + url + "/parkourStatses/search/findParkourPlacement")
-					.queryParam("uuid", uuid.toString())
 					.queryParam("parkourName", parkourName)
+					.queryParam("uuid", uuid.toString())
 					.request(MediaType.APPLICATION_JSON)
 					.get(Response.class)
 					.readEntity(new GenericType<Integer>() {});
