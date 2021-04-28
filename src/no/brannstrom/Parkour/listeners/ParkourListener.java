@@ -70,7 +70,7 @@ public class ParkourListener implements Listener {
 			else if(player.getActivePotionEffects() != null) {
 				for(PotionEffect e : player.getActivePotionEffects()) {
 					if(e.getType().equals(PotionEffectType.SPEED) || e.getType().equals(PotionEffectType.JUMP) || e.getType().equals(PotionEffectType.SLOW_FALLING) || e.getType().equals(PotionEffectType.LEVITATION)) {
-						ParkourHandler.disqualify(player, parkour, "Du ble diskvalifisert for å bruke ulovlig potion effekt.");
+						player.removePotionEffect(e.getType());
 					}
 				}
 			}

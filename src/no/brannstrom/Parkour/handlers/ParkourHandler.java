@@ -237,9 +237,11 @@ public class ParkourHandler {
 		for(Hologram hologram : holograms) {
 			Location aLoc = hologram.getLocation();
 			Serialize serialize = new Serialize();
-			Location bLoc = serialize.deserialize(parkour.getHoloLocation());
-			if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
-				exists = true;
+			if(parkour.getHoloLocation() != null) {
+				Location bLoc = serialize.deserialize(parkour.getHoloLocation());
+				if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
+					exists = true;
+				}
 			}
 		}
 		return exists;
@@ -356,39 +358,26 @@ public class ParkourHandler {
 	}
 
 	public static void setJoinLocation(Player p, Parkour parkour) {
-		if(p.hasPermission("spillere.admin")) {
-			Serialize serialize = new Serialize();
-			parkour.setJoinLocation(serialize.serialize(p.getLocation()));
-			ParkourService.update(parkour);
-			p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("<parkour>", parkour.getName()));
-		}
-		else {
-			p.sendMessage(InfoKeeper.permission);
-		}
+		Serialize serialize = new Serialize();
+		parkour.setJoinLocation(serialize.serialize(p.getLocation()));
+		ParkourService.update(parkour);
+		p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("<parkour>", parkour.getName()));
+
 	}
 
 	public static void setStartLocation(Player p, Parkour parkour) {
-		if(p.hasPermission("spillere.admin")) {
-			Serialize serialize = new Serialize();
-			parkour.setStartLocation(serialize.serialize(p.getLocation()));
-			ParkourService.update(parkour);
-			p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("<parkour>", parkour.getName()));
-		}
-		else {
-			p.sendMessage(InfoKeeper.permission);
-		}
+		Serialize serialize = new Serialize();
+		parkour.setStartLocation(serialize.serialize(p.getLocation()));
+		ParkourService.update(parkour);
+		p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("<parkour>", parkour.getName()));
+
 	}
 
 	public static void setFinishLocation(Player p, Parkour parkour) {
-		if(p.hasPermission("spillere.admin")) {
-			Serialize serialize = new Serialize();
-			parkour.setFinishLocation(serialize.serialize(p.getLocation()));
-			ParkourService.update(parkour);
-			p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("<parkour>", parkour.getName()));
-		}
-		else {
-			p.sendMessage(InfoKeeper.permission);
-		}
+		Serialize serialize = new Serialize();
+		parkour.setFinishLocation(serialize.serialize(p.getLocation()));
+		ParkourService.update(parkour);
+		p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("<parkour>", parkour.getName()));
 	}
 
 	public static void sendFinishMessageUnimproved(Player p, Parkour parkour, long time) {
