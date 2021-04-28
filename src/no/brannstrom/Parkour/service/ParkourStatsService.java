@@ -118,10 +118,10 @@ public class ParkourStatsService {
 		.get();
 	}
 	
-	public static void deleteByParkour(Parkour parkour) {
+	public static void deleteByParkour(String parkourName) {
 		client
-		.target("https://" + url + "/parkourStatses/search/deleteByParkourName")
-		.queryParam("parkourName", parkour.getName())
+		.target("http://" + url + "/parkourStatses/search/deleteByParkourName")
+		.queryParam("parkourName", parkourName)
 		.request(MediaType.APPLICATION_JSON)
 		.get();
 	}

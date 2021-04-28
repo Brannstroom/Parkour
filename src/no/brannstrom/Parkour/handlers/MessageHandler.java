@@ -26,8 +26,9 @@ public class MessageHandler {
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour setfinish <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å sette slutt lokasjon på en parkour");
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour createholo <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å lage hologram for top 10");
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour removeholo <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å fjerne hologram");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour updateholo <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " oppdaterer holo om den sliter");
 		}
-		p.sendMessage(ChatColor.DARK_GRAY + "--------------------------------------");
+		p.sendMessage(ChatColor.DARK_GRAY + "-------------------------------------");
 	}
 
 	public static void sendList(Player p) {

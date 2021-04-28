@@ -12,6 +12,8 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.bukkit.Bukkit;
+
 import no.brannstrom.Parkour.model.Parkour;
 
 public class ParkourService {
@@ -87,6 +89,7 @@ public class ParkourService {
 	}
 
 	public static void deleteParkour(Parkour parkour) {
+		Bukkit.broadcastMessage("5");
 		client
 		.target("http://" + url + "/parkours/search/deleteByUuid")
 		.queryParam("uuid", parkour.getUuid())

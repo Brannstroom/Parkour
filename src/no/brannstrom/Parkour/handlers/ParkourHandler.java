@@ -7,7 +7,9 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
@@ -34,6 +36,20 @@ public class ParkourHandler {
 	}
 
 	public static void startParkour(Player p, ParkourPlayer parkourPlayer) {
+
+		if (p.getInventory().getItemInMainHand() != null) {
+			if ((p.getInventory().getItemInMainHand().getType().equals(Material.TRIDENT))
+					|| (p.getInventory().getItemInOffHand().getType().equals(Material.TRIDENT))) {
+				p.sendMessage(ChatColor.RED + "Du kan ikke starte parkouren mens du holder en trident.");
+				return;
+			}
+		}
+		else if(p.getInventory().getBoots() != null) {
+			if(p.getInventory().getBoots().containsEnchantment(Enchantment.SOUL_SPEED)) {
+				p.sendMessage(ChatColor.RED + "Du kan ikke starte parkouren med soulspeed enchantment.");
+			}
+		}
+
 		MemoryHandler.parkourPlayers.put(p.getUniqueId().toString(), parkourPlayer);
 		MainHandler.sendActionBar(p, InfoKeeper.parkourStartedHotbar);
 		if(p.getActivePotionEffects() != null) {
@@ -115,6 +131,14 @@ public class ParkourHandler {
 		player.teleport(serialize.deserialize(parkour.getJoinLocation()));
 	}
 
+	public static void disqualifyTeleport(Player player, Parkour parkour, String reason) {
+		if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
+			MemoryHandler.parkourPlayers.remove(player.getUniqueId().toString());
+		}
+
+		player.sendMessage(ChatColor.RED + reason);
+	}
+
 	public static void showStats(Player p, Parkour parkour) {
 		int i = 0;
 		p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "-------------");
@@ -182,6 +206,7 @@ public class ParkourHandler {
 						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 					}
 				}
+				hologram.appendTextLine(ChatColor.GOLD + "/parkour stats " + parkour.getName());
 			}
 		}
 	}
@@ -200,7 +225,7 @@ public class ParkourHandler {
 		}
 
 		if(removed) {
-			player.sendMessage(ChatColor.GREEN + "Du satt opp hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
+			player.sendMessage(ChatColor.GREEN + "Du fjernet hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
 		}
 		else {
 			player.sendMessage("" + ChatColor.DARK_RED + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.RED + " har ikke Hologram, eller var ikke mulig å fjerne.");
@@ -227,6 +252,7 @@ public class ParkourHandler {
 						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 					}
 				}
+				hologram.appendTextLine(ChatColor.GOLD + "/parkour stats " + parkour.getName());
 			}
 		}
 	}
@@ -249,9 +275,11 @@ public class ParkourHandler {
 
 	public static boolean isParkour(String name) {
 		boolean isParkour = false;
-		for(Parkour parkour : ParkourService.getParkours()) {
-			if(parkour.getName().equalsIgnoreCase(name)) {
-				isParkour = true;
+		if(!ParkourService.getParkours().isEmpty()) {
+			for(Parkour parkour : ParkourService.getParkours()) {
+				if(parkour.getName().equalsIgnoreCase(name)) {
+					isParkour = true;
+				}
 			}
 		}
 		return isParkour;
@@ -312,13 +340,11 @@ public class ParkourHandler {
 	}
 
 	public static void removeParkour(Player p, Parkour parkour) {
-
+		ParkourStatsService.deleteByParkour(parkour.getName());
 		if(hologramExists(parkour)) {
 			removeHologram(p, parkour);
 		}
-
 		ParkourService.deleteParkour(parkour);
-		ParkourStatsService.deleteByParkour(parkour);
 
 		p.sendMessage(InfoKeeper.parkourRemoved.replaceAll("<parkour>", parkour.getName()));
 	}
