@@ -3,4 +3,4 @@ author: [MiniGutt]
 main: no.brannstrom.Parkour.ParkourPlugin
 version: 1.0
 api-version: 1.16
-softdepend: [Spillere.no]
+softdepend: [Spillere.no, HolographicDisplays]

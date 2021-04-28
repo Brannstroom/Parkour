@@ -23,6 +23,8 @@ public class Parkour {
 	
 	private String finishLocation;
 	
+	private String holoLocation;
+	
 	private Date updatedAt;
 
 	private Date createdAt;

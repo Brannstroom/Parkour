@@ -3,6 +3,7 @@ package no.brannstrom.Parkour;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -16,7 +17,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.common.collect.Lists;
 
 import no.brannstrom.Parkour.commands.ParkourCommand;
+import no.brannstrom.Parkour.handlers.ParkourHandler;
 import no.brannstrom.Parkour.listeners.ParkourListener;
+import no.brannstrom.Parkour.model.Parkour;
+import no.brannstrom.Parkour.service.ParkourService;
 
 public class ParkourPlugin extends JavaPlugin {
 	
@@ -30,7 +34,10 @@ public class ParkourPlugin extends JavaPlugin {
 		loadListeners();
 		loadCommands();
 		
-		getServer().getMessenger().registerOutgoingPluginChannel(this, "spillere:bungee");
+		List<Parkour> parkours = ParkourService.getParkours();
+		for(Parkour parkour : parkours) {
+			ParkourHandler.createHologram(parkour);
+		}
 	}
 
 	public void onDisable() {

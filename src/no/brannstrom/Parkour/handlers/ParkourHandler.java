@@ -1,16 +1,21 @@
 package no.brannstrom.Parkour.handlers;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
 import net.md_5.bungee.api.ChatColor;
+import no.brannstrom.Parkour.ParkourPlugin;
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourPlayer;
 import no.brannstrom.Parkour.model.ParkourStats;
@@ -31,6 +36,11 @@ public class ParkourHandler {
 	public static void startParkour(Player p, ParkourPlayer parkourPlayer) {
 		MemoryHandler.parkourPlayers.put(p.getUniqueId().toString(), parkourPlayer);
 		MainHandler.sendActionBar(p, InfoKeeper.parkourStartedHotbar);
+		if(p.getActivePotionEffects() != null) {
+			for(PotionEffect e : p.getActivePotionEffects()) {
+				p.removePotionEffect(e.getType());
+			}
+		}
 	}
 
 	public static void finishParkour(Player p, ParkourPlayer parkourPlayer) {
@@ -41,48 +51,73 @@ public class ParkourHandler {
 		Parkour parkour = parkourPlayer.getParkour();
 		long time = System.currentTimeMillis()-parkourPlayer.getStartTime();
 
+		boolean messageSent = false;
+
 		ParkourStats parkourRecord = ParkourStatsService.getParkourRecord(parkour);
 		if(parkourRecord != null) {
 			if(time < parkourRecord.getParkourTime()) {
 				User user = UserService.getUser(p.getUniqueId());
 				Bukkit.broadcastMessage(InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(parkourRecord.getParkourTime()-time))));
+				messageSent = true;
 			}
 		}
 		else {
 			User user = UserService.getUser(p.getUniqueId());
 			Bukkit.broadcastMessage(InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
+			messageSent = true;
 		}
 
-		ParkourStats parkourStats = new ParkourStats();
-		parkourStats.setUuid(parkourPlayer.getUuid());
-		parkourStats.setParkourName(parkour.getName());
-		parkourStats.setParkourTime(time);
-
 		ParkourStats personalBest = ParkourStatsService.getPersonalBest(parkourPlayer.getUuid(), parkour.getName());
+
 		if(personalBest != null) {
 			if(time < personalBest.getParkourTime()) {
-				sendFinishMessageImproved(p, parkour, personalBest.getParkourTime(), time);
+				if(!messageSent) {
+					sendFinishMessageImproved(p, parkour, personalBest.getParkourTime(), time);
+				}
+				personalBest.setParkourTime(time);
+				ParkourStatsService.update(personalBest);
 			} else {
-				sendFinishMessageUnimproved(p,parkour,time);
+				if(!messageSent) {
+					sendFinishMessageUnimproved(p,parkour,time);
+				}
 			}
 		}
 		else {
-			sendFirstTimeFinish(p,parkour,time);
+			if(!messageSent) {
+				sendFirstTimeFinish(p,parkour,time);
+			}
+			ParkourStats parkourStats = new ParkourStats();
+			parkourStats.setUuid(parkourPlayer.getUuid());
+			parkourStats.setParkourName(parkour.getName());
+			parkourStats.setParkourTime(time);
+			ParkourStatsService.update(parkourStats);
 		}
 
 		MainHandler.sendActionBar(p, InfoKeeper.parkourFinishedHotbar);
-		ParkourStatsService.update(parkourStats);
+
+		Integer placement = ParkourStatsService.getParkourPlacement(p.getUniqueId(), parkour.getName());
+		if(placement != null) {
+			if(placement <= 10) {
+				if(hologramExists(parkour)) {
+					updateHologram(parkour);
+				}
+			}
+		}
 	}
 
-	public static void stopParkour() {
+	public static void disqualify(Player player, Parkour parkour, String reason) {
+		if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
+			MemoryHandler.parkourPlayers.remove(player.getUniqueId().toString());
+		}
 
+		player.sendMessage(ChatColor.RED + reason);
+		Serialize serialize = new Serialize();
+		player.teleport(serialize.deserialize(parkour.getJoinLocation()));
 	}
 
 	public static void showStats(Player p, Parkour parkour) {
 		int i = 0;
-		Bukkit.broadcastMessage("hm");
-		List<ParkourStats> parkourStatsTop10 = ParkourStatsService.getTop10(parkour);
-		Bukkit.broadcastMessage("Top10 Size: " + parkourStatsTop10.size());
+		p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "-------------");
 		if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
 			for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
 				i++;
@@ -101,6 +136,113 @@ public class ParkourHandler {
 		else {
 			p.sendMessage(ChatColor.RED + "Ingen har fullført " + ChatColor.DARK_RED + parkour.getName() + ChatColor.RED + " parkouren. Bli den første!");
 		}
+	}
+
+	public static void createHologram(Player player, Parkour parkour) {
+		if(!hologramExists(parkour)) {
+			Hologram hologram = HologramsAPI.createHologram(ParkourPlugin.instance, player.getLocation());
+			int i = 0;
+			hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "------");
+			if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
+				for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
+					i++;
+					UUID uuid = stats.getUuid();
+					User user = UserService.getUser(uuid);
+					String name = "anonym";
+					if (user != null) name = MainHandler.getPrefixName(user);
+					hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
+				}
+			}
+
+			Serialize serialize = new Serialize();
+			parkour.setHoloLocation(serialize.serialize(player.getLocation()));
+			ParkourService.update(parkour);
+
+			player.sendMessage(ChatColor.GREEN + "Du satt opp hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
+		}
+		else {
+			player.sendMessage(ChatColor.RED + "Det eksisterer allerede et hologram for " + ChatColor.DARK_RED + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.RED + " parkouren. Fjern den før du setter ny.");
+		}
+	}
+
+	public static void createHologram(Parkour parkour) {
+		if(parkour.getHoloLocation() != null) {
+			if(!hologramExists(parkour)) {
+				Serialize serialize = new Serialize();
+				Hologram hologram = HologramsAPI.createHologram(ParkourPlugin.instance, serialize.deserialize(parkour.getHoloLocation()));
+				int i = 0;
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "------");
+				if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
+					for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
+						i++;
+						UUID uuid = stats.getUuid();
+						User user = UserService.getUser(uuid);
+						String name = "anonym";
+						if (user != null) name = MainHandler.getPrefixName(user);
+						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
+					}
+				}
+			}
+		}
+	}
+
+	public static void removeHologram(Player player, Parkour parkour) {
+		Collection<Hologram> holograms = HologramsAPI.getHolograms(ParkourPlugin.instance);
+		boolean removed = false;
+		for(Hologram hologram : holograms) {
+			Location aLoc = hologram.getLocation();
+			Serialize serialize = new Serialize();
+			Location bLoc = serialize.deserialize(parkour.getHoloLocation());
+			if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
+				hologram.delete();
+				removed = true;
+			}
+		}
+
+		if(removed) {
+			player.sendMessage(ChatColor.GREEN + "Du satt opp hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
+		}
+		else {
+			player.sendMessage("" + ChatColor.DARK_RED + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.RED + " har ikke Hologram, eller var ikke mulig å fjerne.");
+		}
+	}
+
+	public static void updateHologram(Parkour parkour) {
+		Collection<Hologram> holograms = HologramsAPI.getHolograms(ParkourPlugin.instance);
+		for(Hologram hologram : holograms) {
+			Location aLoc = hologram.getLocation();
+			Serialize serialize = new Serialize();
+			Location bLoc = serialize.deserialize(parkour.getHoloLocation());
+			if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
+				hologram.clearLines();
+				int i = 0;
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "------");
+				if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
+					for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
+						i++;
+						UUID uuid = stats.getUuid();
+						User user = UserService.getUser(uuid);
+						String name = "anonym";
+						if (user != null) name = MainHandler.getPrefixName(user);
+						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
+					}
+				}
+			}
+		}
+	}
+
+	public static boolean hologramExists(Parkour parkour) {
+		boolean exists = false;
+		Collection<Hologram> holograms = HologramsAPI.getHolograms(ParkourPlugin.instance);
+		for(Hologram hologram : holograms) {
+			Location aLoc = hologram.getLocation();
+			Serialize serialize = new Serialize();
+			Location bLoc = serialize.deserialize(parkour.getHoloLocation());
+			if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
+				exists = true;
+			}
+		}
+		return exists;
 	}
 
 	public static boolean isParkour(String name) {
@@ -169,7 +311,12 @@ public class ParkourHandler {
 
 	public static void removeParkour(Player p, Parkour parkour) {
 
+		if(hologramExists(parkour)) {
+			removeHologram(p, parkour);
+		}
+
 		ParkourService.deleteParkour(parkour);
+		ParkourStatsService.deleteByParkour(parkour);
 
 		p.sendMessage(InfoKeeper.parkourRemoved.replaceAll("<parkour>", parkour.getName()));
 	}

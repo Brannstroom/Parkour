@@ -12,6 +12,8 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.bukkit.Bukkit;
+
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourStats;
 
@@ -50,11 +52,11 @@ public class ParkourStatsService {
 		});
 	}
 	
-	public static ParkourStats getPersonalBest(UUID uuid, String name) {
+	public static ParkourStats getPersonalBest(UUID uuid, String parkourName) {
 		ParkourStats response = client
 				.target("http://" + url + "/parkourStatses/search/findFirstByParkourNameAndUuidOrderByParkourTimeAsc")
 				.queryParam("uuid", uuid)
-				.queryParam("parkourName", name)
+				.queryParam("parkourName", parkourName)
 				.request(MediaType.APPLICATION_JSON)
 				.get(Response.class)
 				.readEntity(new GenericType<ParkourStats>() {});
@@ -86,12 +88,12 @@ public class ParkourStatsService {
 		}
 	}
 	
-	public static Integer getParkourPlacement(UUID uuid, String name) {
+	public static Integer getParkourPlacement(UUID uuid, String parkourName) {
 		try {
 			return client
 					.target("http://" + url + "/parkourStatses/search/findParkourPlacement")
 					.queryParam("uuid", uuid.toString())
-					.queryParam("name", name)
+					.queryParam("parkourName", parkourName)
 					.request(MediaType.APPLICATION_JSON)
 					.get(Response.class)
 					.readEntity(new GenericType<Integer>() {});
@@ -111,15 +113,15 @@ public class ParkourStatsService {
 	public static void deleteParkourStats(ParkourStats parkourStats) {
 		client
 		.target("http://" + url + "/parkourStatses/search/deleteByUuid")
-		.queryParam("name", parkourStats.getUuid())
+		.queryParam("uuid", parkourStats.getUuid())
 		.request(MediaType.APPLICATION_JSON)
 		.get();
 	}
 	
-	public static void deleteParkourStatsOnParkour(Parkour parkour) {
+	public static void deleteByParkour(Parkour parkour) {
 		client
-		.target("https://" + url + "/parkourStatses/search/deleteParkourStatsOnParkour")
-		.queryParam("name", parkour.getName())
+		.target("https://" + url + "/parkourStatses/search/deleteByParkourName")
+		.queryParam("parkourName", parkour.getName())
 		.request(MediaType.APPLICATION_JSON)
 		.get();
 	}

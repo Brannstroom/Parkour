@@ -32,6 +32,10 @@ public class ParkourCommand implements CommandExecutor {
 				ParkourHandler.setStartLocation(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("setfinish") && ParkourHandler.getParkour(args[1]) != null) {
 				ParkourHandler.setFinishLocation(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("createholo") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.createHologram(p, ParkourHandler.getParkour(args[1]));
+			} else if(args[0].equalsIgnoreCase("removeholo") && ParkourHandler.getParkour(args[1]) != null) {
+				ParkourHandler.removeHologram(p, ParkourHandler.getParkour(args[1]));
 			} else if(args[0].equalsIgnoreCase("stats") && ParkourHandler.getParkour(args[1]) != null) {
 				ParkourHandler.showStats(p, ParkourHandler.getParkour(args[1]));
 			} else {

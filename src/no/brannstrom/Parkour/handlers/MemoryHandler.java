@@ -8,5 +8,5 @@ public class MemoryHandler {
 	
 	// UUID = Players uuid, Long = parkour starttime
 	public static HashMap<String, ParkourPlayer> parkourPlayers = new HashMap<>();
-
+	
 }
