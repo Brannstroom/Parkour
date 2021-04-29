@@ -17,8 +17,8 @@ public class MessageHandler {
 		p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour list" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se en liste over alle parkours");
 		p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour stats <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se stats på en parkour");
 		if(p.hasPermission("spillere.admin")) {
-			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se info om en parkour");
-			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour join <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å joine en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour tp <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å tp til en parkour");
+			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour info <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se info om en parkour");
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour create <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å lage en parkour");
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour remove <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å fjerne en parkour");
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour setjoin <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å sette tp lokasjon på en parkour");
@@ -51,19 +51,15 @@ public class MessageHandler {
 	}
 
 	public static void showParkourInfo(Player p, Parkour parkour) {
-		if(p.hasPermission("spillere.admin")) {
-			p.sendMessage("Name: " + parkour.getName());
-			Serialize serialize = new Serialize();
-			Location joinLocation = serialize.deserialize(parkour.getJoinLocation());
-			Location startLocation = serialize.deserialize(parkour.getStartLocation());
-			Location finishLocation = serialize.deserialize(parkour.getFinishLocation());
-			
-			p.sendMessage("Join Position: X:" + joinLocation.getBlockX() + " Y:" + joinLocation.getBlockY() + " Z:" + joinLocation.getBlockZ());
-			p.sendMessage("Start Position: X:" + startLocation.getBlockX() + " Y:" + startLocation.getBlockY() + " Z:" + startLocation.getBlockZ());
-			p.sendMessage("Finish Position: X:" + finishLocation.getBlockX() + " Y:" + finishLocation.getBlockY() + " Z:" + finishLocation.getBlockZ());
-		} else {
-			p.sendMessage(InfoKeeper.permission);
-		}
+		p.sendMessage(ChatColor.GREEN + "Parkour navn: " + ChatColor.RESET + parkour.getName());
+		Serialize serialize = new Serialize();
+		Location joinLocation = serialize.deserialize(parkour.getJoinLocation());
+		Location startLocation = serialize.deserialize(parkour.getStartLocation());
+		Location finishLocation = serialize.deserialize(parkour.getFinishLocation());
+
+		p.sendMessage(ChatColor.GREEN + "Join Location: X:" + ChatColor.RESET + joinLocation.getBlockX() + ChatColor.GREEN + " Y:" + ChatColor.RESET + joinLocation.getBlockY() + ChatColor.GREEN +  " Z:" + ChatColor.RESET + joinLocation.getBlockZ());
+		p.sendMessage(ChatColor.GREEN + "Start Location: X:" + ChatColor.RESET + startLocation.getBlockX() + ChatColor.GREEN + " Y:" + ChatColor.RESET + startLocation.getBlockY() + ChatColor.GREEN +  " Z:" + ChatColor.RESET + startLocation.getBlockZ());
+		p.sendMessage(ChatColor.GREEN + "Finish Location: X:" + ChatColor.RESET + finishLocation.getBlockX() + ChatColor.GREEN + " Y:" + ChatColor.RESET + finishLocation.getBlockY() + ChatColor.GREEN +  " Z:" + ChatColor.RESET + finishLocation.getBlockZ());
 	}
 
 }

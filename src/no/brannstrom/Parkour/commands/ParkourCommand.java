@@ -17,10 +17,13 @@ public class ParkourCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		Player p = (Player) sender;
-		
+
 		if(args.length == 1) {
 			if(args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("liste")) {
 				MessageHandler.sendList(p);
+			}
+			else {
+				MessageHandler.sendPlayerInfoMessage(p);
 			}
 		}
 		else if(args.length == 2) {
@@ -34,7 +37,15 @@ public class ParkourCommand implements CommandExecutor {
 			}
 			else {
 				if(p.hasPermission("spillere.admin")) {
-					if(args[0].equalsIgnoreCase("join")) {
+					if(args[0].equalsIgnoreCase("info") || args[0].equalsIgnoreCase("informasjon")) {
+						if(ParkourHandler.isParkour(args[1])) {
+							MessageHandler.showParkourInfo(p, ParkourHandler.getParkour(args[1]));
+						}
+						else {
+							p.sendMessage(InfoKeeper.parkourDontExist.replaceAll("<parkour>", args[1]));
+						}
+					}
+					else if(args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("teleport")) {
 						if(ParkourHandler.isParkour(args[1])) {
 							ParkourHandler.joinParkour(p, ParkourHandler.getParkour(args[1]));
 						}
@@ -120,7 +131,7 @@ public class ParkourCommand implements CommandExecutor {
 		else {
 			MessageHandler.sendPlayerInfoMessage(p);
 		}
-		
+
 		return true;
 	}
 }

@@ -4,7 +4,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class InfoKeeper {
 	
-	public static String parkourJoined = ChatColor.GREEN + "Du startet " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren.";
+	public static String parkourJoined = ChatColor.GREEN + "Du teleportet til " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren.";
 	public static String parkourCreated = ChatColor.GREEN + "Du lagde en parkour med navnet " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + ". Bruk settp, setstart, setfinish og createholo for å gjøre ferdig parkouren.";
 	public static String setParkourJoinLocation = ChatColor.GREEN + "Du satt tp lokasjon for " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren.";
 	public static String setParkourStartLocation = ChatColor.GREEN + "Du satt start lokasjon for " + ChatColor.DARK_GREEN + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.GREEN + " parkouren.";

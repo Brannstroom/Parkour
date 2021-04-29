@@ -34,7 +34,13 @@ public class ParkourHandler {
 	public static void joinParkour(Player p, Parkour parkour) {
 		p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getName()));
 		Serialize serialize = new Serialize();
-		p.teleport(serialize.deserialize(parkour.getJoinLocation()));
+		Location loc = serialize.deserialize(parkour.getJoinLocation());
+		if(p.getLocation().getWorld().equals(loc.getWorld())) {
+			p.teleport(loc);
+		}
+		else {
+			p.sendMessage(ChatColor.RED + "Denne parkouren er i en annen verden eller på en annen server.");
+		}
 	}
 
 	public static void startParkour(Player p, ParkourPlayer parkourPlayer) {
@@ -164,7 +170,7 @@ public class ParkourHandler {
 
 		player.sendMessage(ChatColor.RED + reason);
 	}
-	
+
 	public static void removePlayer(UUID uuid, Parkour parkour) {
 		if(MemoryHandler.parkourPlayers.containsKey(uuid.toString())) {
 			ParkourPlayer pp = MemoryHandler.parkourPlayers.get(uuid.toString());
@@ -211,7 +217,7 @@ public class ParkourHandler {
 					hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 				}
 			}
-			hologram.appendTextLine(ChatColor.GOLD + "/parkour stats " + parkour.getName());
+			hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getName());
 
 			Serialize serialize = new Serialize();
 			parkour.setHoloLocation(serialize.serialize(player.getLocation()));
@@ -295,13 +301,15 @@ public class ParkourHandler {
 	public static boolean hologramExists(Parkour parkour) {
 		boolean exists = false;
 		Collection<Hologram> holograms = HologramsAPI.getHolograms(ParkourPlugin.instance);
-		for(Hologram hologram : holograms) {
-			Location aLoc = hologram.getLocation();
-			Serialize serialize = new Serialize();
-			if(parkour.getHoloLocation() != null) {
-				Location bLoc = serialize.deserialize(parkour.getHoloLocation());
-				if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
-					exists = true;
+		if(! holograms.isEmpty()) {
+			for(Hologram hologram : holograms) {
+				Location aLoc = hologram.getLocation();
+				Serialize serialize = new Serialize();
+				if(parkour.getHoloLocation() != null) {
+					Location bLoc = serialize.deserialize(parkour.getHoloLocation());
+					if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
+						exists = true;
+					}
 				}
 			}
 		}
