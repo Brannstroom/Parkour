@@ -32,10 +32,10 @@ import no.brannstrom.Parkour.service.UserService;
 public class ParkourHandler {
 
 	public static void joinParkour(Player p, Parkour parkour) {
-		p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getName()));
 		Serialize serialize = new Serialize();
 		Location loc = serialize.deserialize(parkour.getJoinLocation());
 		if(p.getLocation().getWorld().equals(loc.getWorld())) {
+			p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getName()));
 			p.teleport(loc);
 		}
 		else {
