@@ -12,6 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
@@ -37,6 +39,10 @@ public class ParkourHandler {
 
 	public static void startParkour(Player p, ParkourPlayer parkourPlayer) {
 
+		if(MemoryHandler.parkourPlayers.containsKey(p.getUniqueId().toString())) {
+			MemoryHandler.parkourPlayers.remove(p.getUniqueId().toString());
+		}
+
 		if (p.getInventory().getItemInMainHand() != null) {
 			if ((p.getInventory().getItemInMainHand().getType().equals(Material.TRIDENT))
 					|| (p.getInventory().getItemInOffHand().getType().equals(Material.TRIDENT))) {
@@ -50,17 +56,33 @@ public class ParkourHandler {
 			}
 		}
 
-		MemoryHandler.parkourPlayers.put(p.getUniqueId().toString(), parkourPlayer);
 		MainHandler.sendActionBar(p, InfoKeeper.parkourStartedHotbar);
 		if(p.getActivePotionEffects() != null) {
 			for(PotionEffect e : p.getActivePotionEffects()) {
 				p.removePotionEffect(e.getType());
 			}
 		}
+
+		long startTime = parkourPlayer.getStartTime();
+		BukkitTask task = new BukkitRunnable() {
+			public void run() {
+				if(MemoryHandler.parkourPlayers.containsKey(p.getUniqueId().toString())) {
+					p.sendActionBar(ChatColor.GREEN + "Tid: " + ChatColor.RESET + new SimpleDateFormat("mm:ss:SSS").format(new Date(System.currentTimeMillis()-startTime)));
+				}
+				else {
+					cancel();
+				}
+			}
+		}.runTaskTimer(ParkourPlugin.instance, 20L, 5L);
+
+		parkourPlayer.setTaskId(task.getTaskId());
+		MemoryHandler.parkourPlayers.put(p.getUniqueId().toString(), parkourPlayer);
 	}
 
 	public static void finishParkour(Player p, ParkourPlayer parkourPlayer) {
 		if(MemoryHandler.parkourPlayers.containsKey(p.getUniqueId().toString())) {
+			ParkourPlayer pp = MemoryHandler.parkourPlayers.get(p.getUniqueId().toString());
+			Bukkit.getScheduler().cancelTask(pp.getTaskId());
 			MemoryHandler.parkourPlayers.remove(p.getUniqueId().toString());
 		}
 
@@ -123,6 +145,8 @@ public class ParkourHandler {
 
 	public static void disqualify(Player player, Parkour parkour, String reason) {
 		if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
+			ParkourPlayer pp = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString());
+			Bukkit.getScheduler().cancelTask(pp.getTaskId());
 			MemoryHandler.parkourPlayers.remove(player.getUniqueId().toString());
 		}
 
@@ -133,10 +157,20 @@ public class ParkourHandler {
 
 	public static void disqualifyTeleport(Player player, Parkour parkour, String reason) {
 		if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
+			ParkourPlayer pp = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString());
+			Bukkit.getScheduler().cancelTask(pp.getTaskId());
 			MemoryHandler.parkourPlayers.remove(player.getUniqueId().toString());
 		}
 
 		player.sendMessage(ChatColor.RED + reason);
+	}
+	
+	public static void removePlayer(UUID uuid, Parkour parkour) {
+		if(MemoryHandler.parkourPlayers.containsKey(uuid.toString())) {
+			ParkourPlayer pp = MemoryHandler.parkourPlayers.get(uuid.toString());
+			Bukkit.getScheduler().cancelTask(pp.getTaskId());
+			MemoryHandler.parkourPlayers.remove(uuid.toString());
+		}
 	}
 
 	public static void showStats(Player p, Parkour parkour) {
@@ -177,6 +211,7 @@ public class ParkourHandler {
 					hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 				}
 			}
+			hologram.appendTextLine(ChatColor.GOLD + "/parkour stats " + parkour.getName());
 
 			Serialize serialize = new Serialize();
 			parkour.setHoloLocation(serialize.serialize(player.getLocation()));
@@ -206,7 +241,7 @@ public class ParkourHandler {
 						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 					}
 				}
-				hologram.appendTextLine(ChatColor.GOLD + "/parkour stats " + parkour.getName());
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getName());
 			}
 		}
 	}
@@ -252,7 +287,7 @@ public class ParkourHandler {
 						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 					}
 				}
-				hologram.appendTextLine(ChatColor.GOLD + "/parkour stats " + parkour.getName());
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getName());
 			}
 		}
 	}

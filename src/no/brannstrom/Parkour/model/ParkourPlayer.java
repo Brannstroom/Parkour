@@ -18,4 +18,6 @@ public class ParkourPlayer {
 
 	private Parkour parkour;
 	
+	private int taskId;
+	
 }

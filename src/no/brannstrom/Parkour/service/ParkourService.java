@@ -89,7 +89,6 @@ public class ParkourService {
 	}
 
 	public static void deleteParkour(Parkour parkour) {
-		Bukkit.broadcastMessage("5");
 		client
 		.target("http://" + url + "/parkours/search/deleteByUuid")
 		.queryParam("uuid", parkour.getUuid())

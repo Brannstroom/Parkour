@@ -1,6 +1,6 @@
 package no.brannstrom.Parkour.listeners;
 
-import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,7 +20,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +44,8 @@ public class ParkourListener implements Listener {
 				Player p = event.getPlayer();
 				if(ParkourHandler.isStartPressurePlate(block)) {
 					if(MemoryHandler.parkourPlayers.containsKey(p.getUniqueId().toString())) {
+						ParkourPlayer pp = MemoryHandler.parkourPlayers.get(p.getUniqueId().toString());
+						Bukkit.getScheduler().cancelTask(pp.getTaskId());
 						MemoryHandler.parkourPlayers.remove(p.getUniqueId().toString());
 					}
 
@@ -240,4 +244,22 @@ public class ParkourListener implements Listener {
 		}
 		return isSpawnEgg;
 	}	
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		UUID uuid = event.getPlayer().getUniqueId();
+		if(MemoryHandler.parkourPlayers.containsKey(uuid.toString())) {
+			Parkour parkour = MemoryHandler.parkourPlayers.get(uuid.toString()).getParkour();
+			ParkourHandler.removePlayer(uuid, parkour);
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event) {
+		UUID uuid = event.getPlayer().getUniqueId();
+		if(MemoryHandler.parkourPlayers.containsKey(uuid.toString())) {
+			Parkour parkour = MemoryHandler.parkourPlayers.get(uuid.toString()).getParkour();
+			ParkourHandler.removePlayer(uuid, parkour);
+		}
+	}
 }
