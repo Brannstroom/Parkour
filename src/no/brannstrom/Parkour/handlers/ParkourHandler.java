@@ -181,7 +181,7 @@ public class ParkourHandler {
 
 	public static void showStats(Player p, Parkour parkour) {
 		int i = 0;
-		p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "-------------");
+		p.sendMessage(ChatColor.DARK_GRAY + "------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "------");
 		if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
 			for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
 				i++;
@@ -192,9 +192,11 @@ public class ParkourHandler {
 				p.sendMessage(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 			}
 			Integer placement = ParkourStatsService.getParkourPlacement(p.getUniqueId(), parkour.getName());
-			if(placement > 10) {
-				ParkourStats stats = ParkourStatsService.getPersonalBest(p.getUniqueId(), parkour.getName());
-				p.sendMessage(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + MainHandler.getPrefixName(UserService.getUser(p.getUniqueId())) + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
+			if(placement != null) {
+				if(placement > 10) {
+					ParkourStats stats = ParkourStatsService.getPersonalBest(p.getUniqueId(), parkour.getName());
+					p.sendMessage(ChatColor.YELLOW + "" + placement + ". " + ChatColor.WHITE + MainHandler.getPrefixName(UserService.getUser(p.getUniqueId())) + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
+				}
 			}
 		}
 		else {
