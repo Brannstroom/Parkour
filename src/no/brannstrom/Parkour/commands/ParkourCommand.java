@@ -1,8 +1,12 @@
 package no.brannstrom.Parkour.commands;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatColor;
@@ -12,8 +16,9 @@ import no.brannstrom.Parkour.handlers.MemoryHandler;
 import no.brannstrom.Parkour.handlers.MessageHandler;
 import no.brannstrom.Parkour.handlers.ParkourHandler;
 import no.brannstrom.Parkour.model.Parkour;
+import no.brannstrom.Parkour.service.ParkourService;
 
-public class ParkourCommand implements CommandExecutor {
+public class ParkourCommand implements CommandExecutor, TabCompleter {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -141,5 +146,19 @@ public class ParkourCommand implements CommandExecutor {
 		}
 
 		return true;
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
+		List<String> tabList = new ArrayList<String>();
+		if (args.length == 2) {
+			for (Parkour parkour : ParkourService.getParkours()) {
+				String homeName = parkour.getName();
+				if (homeName.toLowerCase().startsWith(args[0].toLowerCase())) {
+					tabList.add(homeName);
+				}
+			}
+		}
+		return tabList; 
 	}
 }
