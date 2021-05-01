@@ -1,5 +1,7 @@
 package no.brannstrom.Parkour.listeners;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -16,6 +18,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -25,9 +28,11 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.event.entity.EntityMountEvent;
 
 import no.brannstrom.Parkour.handlers.MemoryHandler;
 import no.brannstrom.Parkour.handlers.ParkourHandler;
@@ -108,7 +113,12 @@ public class ParkourListener implements Listener {
 		if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
 			Parkour parkour = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString()).getParkour();
 			String cmd = event.getMessage().toLowerCase();
-			String[] arrCmd = {"/m ", "/msg ", "/pm ", "/tell ", "/whisper ", "/r ", "/reply ", "/svar ", "/regler ", "/rules ", "/stem ", "/vote ", "/h ", "/handel ", "/bank ", "/b ", "/parkour "};
+			String[] arrCmd = {"/m", "/msg", "/pm", "/tell", "/whisper", "/r", "/reply", "/svar",
+					"/regler", "/rules", "/stem", "/vote", "/h", "/handel",
+					"/bank", "/b", "/parkour", "/gmenu", "/gadgetsmenu",
+					"/ban", "/bans", "/utesteng", "/prikk", "/warn", "/unban", "/fjernprikk", "/unmute",
+					"/mute", "/tempmute", "/mutes", "/freeze", "/frys", "/unfreeze", "/ufrys", "/co", "/ss", "/stabsamtale", "/adminchat", "/ac", 
+					"/clean", "/ryddchat", "/clearchat", "/cc", "/rb", "/rulleblad", "/iplogg", "/ipban", "/ipunban"};
 			boolean cheater = true;
 			for(String s : arrCmd) {
 				if(cmd.startsWith(s)){
@@ -125,8 +135,25 @@ public class ParkourListener implements Listener {
 	public void onPlayerTeleport(final PlayerTeleportEvent event) {
 		Player player = event.getPlayer();
 		if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
-			Parkour parkour = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString()).getParkour();
-			ParkourHandler.disqualifyTeleport(player, parkour, "Du ble diskvalifisert for å teleportere.");
+
+			List<TeleportCause> tpCauses = new ArrayList<>();
+			tpCauses.add(TeleportCause.CHORUS_FRUIT);tpCauses.add(TeleportCause.COMMAND);tpCauses.add(TeleportCause.END_GATEWAY);tpCauses.add(TeleportCause.END_PORTAL);
+			tpCauses.add(TeleportCause.ENDER_PEARL);tpCauses.add(TeleportCause.NETHER_PORTAL);tpCauses.add(TeleportCause.PLUGIN);
+			if(tpCauses.contains(event.getCause())) {
+				Parkour parkour = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString()).getParkour();
+				ParkourHandler.disqualifyTeleport(player, parkour, "Du ble diskvalifisert for å teleportere.");
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onEntityMount(EntityMountEvent event) {
+		if(event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
+				Parkour parkour = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString()).getParkour();
+				ParkourHandler.disqualifyTeleport(player, parkour, "Du ble diskvalifisert for å ri.");
+			}
 		}
 	}
 
@@ -150,13 +177,17 @@ public class ParkourListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Player player = event.getPlayer();
 		if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
-			Parkour parkour = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString()).getParkour();
-			ParkourHandler.disqualify(player, parkour, "Du ble diskvalifert for å ødelegge blokker.");
+			Block block = event.getBlock();
+			if(!block.isPassable()) {
+				Parkour parkour = MemoryHandler.parkourPlayers.get(player.getUniqueId().toString()).getParkour();
+				ParkourHandler.disqualify(player, parkour, "Du ble diskvalifert for å ødelegge blokker.");
+				event.setCancelled(true);
+			}
 			event.setCancelled(true);
 		}
 	}
@@ -244,7 +275,7 @@ public class ParkourListener implements Listener {
 		}
 		return isSpawnEgg;
 	}	
-	
+
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		UUID uuid = event.getPlayer().getUniqueId();
@@ -253,13 +284,25 @@ public class ParkourListener implements Listener {
 			ParkourHandler.removePlayer(uuid, parkour);
 		}
 	}
-	
+
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		UUID uuid = event.getPlayer().getUniqueId();
 		if(MemoryHandler.parkourPlayers.containsKey(uuid.toString())) {
 			Parkour parkour = MemoryHandler.parkourPlayers.get(uuid.toString()).getParkour();
 			ParkourHandler.removePlayer(uuid, parkour);
+		}
+	}
+
+	@EventHandler
+	public void onFoodLevelChange(FoodLevelChangeEvent event) {
+		if(event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if(MemoryHandler.parkourPlayers.containsKey(player.getUniqueId().toString())) {
+				if(event.getFoodLevel() < player.getFoodLevel()) {
+					event.setCancelled(true);
+				}
+			}
 		}
 	}
 }

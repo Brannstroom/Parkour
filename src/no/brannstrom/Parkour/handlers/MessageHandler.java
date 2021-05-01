@@ -15,9 +15,9 @@ public class MessageHandler {
 	public static void sendPlayerInfoMessage(Player p) {
 		p.sendMessage(ChatColor.DARK_GRAY + "--------------" + ChatColor.GOLD + "{ Parkour }" + ChatColor.DARK_GRAY + "-------------");
 		p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour liste" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se en liste over alle parkours");
+		p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour tp <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å tp til en parkour");
 		p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour stats <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se stats på en parkour");
-		if(p.hasPermission("spillere.admin")) {
-			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour tp <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å tp til en parkour");
+		if(p.hasPermission("spillere.mod")) {
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour info <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å se info om en parkour");
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour create <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å lage en parkour");
 			p.sendMessage(ChatColor.GRAY + "Bruk: " + ChatColor.YELLOW + "/parkour remove <navn>" + ChatColor.DARK_GRAY + " - " + ChatColor.GRAY + " for å fjerne en parkour");

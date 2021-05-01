@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,7 +19,10 @@ import org.bukkit.scheduler.BukkitTask;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 
-import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import no.brannstrom.Parkour.ParkourPlugin;
 import no.brannstrom.Parkour.model.Parkour;
 import no.brannstrom.Parkour.model.ParkourPlayer;
@@ -101,13 +105,13 @@ public class ParkourHandler {
 		if(parkourRecord != null) {
 			if(time < parkourRecord.getParkourTime()) {
 				User user = UserService.getUser(p.getUniqueId());
-				Bukkit.broadcastMessage(InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(parkourRecord.getParkourTime()-time))));
+				MainHandler.broadcastMessage(parkour, InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))).replaceAll("<improvement>", new SimpleDateFormat("mm:ss:SSS").format(new Date(parkourRecord.getParkourTime()-time))));
 				messageSent = true;
 			}
 		}
 		else {
 			User user = UserService.getUser(p.getUniqueId());
-			Bukkit.broadcastMessage(InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
+			MainHandler.broadcastMessage(parkour, InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", new SimpleDateFormat("mm:ss:SSS").format(new Date(time))));
 			messageSent = true;
 		}
 

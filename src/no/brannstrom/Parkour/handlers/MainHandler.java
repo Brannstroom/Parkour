@@ -1,13 +1,19 @@
 package no.brannstrom.Parkour.handlers;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import no.brannstrom.Parkour.model.Parkour;
+import no.brannstrom.Parkour.model.Serialize;
 import no.brannstrom.Parkour.model.User;
 
 public class MainHandler {
@@ -18,6 +24,112 @@ public class MainHandler {
 	
 	public static String formatTime(long millis) {
 		return new SimpleDateFormat("mm:ss:SSS").format(new Date(millis));
+	}
+	
+	public static void broadcastMessage(Parkour parkour, String msg){
+		
+		Serialize serialize = new Serialize();
+		Location location = serialize.deserialize(parkour.getJoinLocation());
+		
+		for (Player p : Bukkit.getServer().getOnlinePlayers()){
+			try {
+				if (p.getLocation().distance(location) <= 75){
+					p.sendMessage(msg);
+				}
+			} catch (Exception ex){}
+		}
+	}
+	
+	public static String colorText(ChatColor chatColor, String string) {
+		String[] args = string.split(" ");
+		String result = "";
+		for(String str : args) {
+			result += chatColor + str + " ";
+		}
+
+		return result;
+	}
+	
+	public static String getCombatTimer(Player player) {
+		long timeLeft = MemoryHandler.combatTimer.get(player.getUniqueId()) - System.currentTimeMillis();
+		return ChatColor.RED + "Du er i kamp! Vent " + ChatColor.DARK_RED + parseLong(timeLeft, false) + ChatColor.RED + " før du kan teleportere!";
+	}
+	
+	public static String parseLong(long milliseconds, boolean abbreviate) {
+		List<String> units = new ArrayList<String>();
+		long amount;
+		if(milliseconds < 999) return "1 sekund";
+		amount = milliseconds / (7 * 24 * 60 * 60 * 1000);
+		units.add(amount + "u");
+		amount = milliseconds / (24 * 60 * 60 * 1000) % 7;
+		units.add(amount + "d");
+		amount = milliseconds / (60 * 60 * 1000) % 24;
+		units.add(amount + "t");
+		amount = milliseconds / (60 * 1000) % 60;
+		units.add(amount + "m");
+		amount = milliseconds / 1000 % 60;
+		units.add(amount + "s");
+		String[] array = new String[5];
+		char end;
+		for (String s : units) {
+			end = s.charAt(s.length() - 1);
+			switch (end) {
+			case 'u':
+				array[0] = s;
+			case 'd':
+				array[1] = s;
+			case 't':
+				array[2] = s;
+			case 'm':
+				array[3] = s;
+			case 's':
+				array[4] = s;
+			}
+		}
+		units.clear();
+		int i = 0;
+		for (String s : array){
+			if (!s.startsWith("0")){
+				i++;
+				if (i <= 2){
+					units.add(s);
+				}
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		String word, count, and;
+		char c;
+		for (String s : units) {
+			if (!abbreviate) {
+				c = s.charAt(s.length() - 1);
+				count = s.substring(0, s.length() - 1);
+				switch (c) {
+				case 'u':
+					word = "uke" + (count.equals("1") ? "" : "r");
+					break;
+				case 'd':
+					word = "dag" + (count.equals("1") ? "" : "er");
+					break;
+				case 't':
+					word = "time" + (count.equals("1") ? "" : "r");
+					break;
+				case 'm':
+					word = "minutt" + (count.equals("1") ? "" : "er");
+					break;
+				default:
+					word = "sekund" + (count.equals("1") ? "" : "er");
+					break;
+				}
+
+				and = s.equals(units.get(units.size() - 1)) ? "" : s.equals(units.get(units.size() - 2)) ? " og " : ", ";
+				sb.append(count + " " + word + and);
+			} else {
+				sb.append(s);
+				if (!s.equals(units.get(units.size() - 1)))
+					sb.append("-");
+			}
+		}
+		return sb.toString().trim().length() == 0 ? null : sb.toString().trim();
 	}
 	
 	public static String getPrefixName(User user) {
