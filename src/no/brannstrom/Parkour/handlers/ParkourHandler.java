@@ -208,7 +208,7 @@ public class ParkourHandler {
 		if(!hologramExists(parkour)) {
 			Hologram hologram = HologramsAPI.createHologram(ParkourPlugin.instance, player.getLocation());
 			int i = 0;
-			hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.GOLD + "{ " + ChatColor.BOLD + parkour.getName() + " Stats }" + ChatColor.DARK_GRAY + "------");
+			hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
 			if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
 				for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
 					i++;
@@ -216,7 +216,7 @@ public class ParkourHandler {
 					User user = UserService.getUser(uuid);
 					String name = "anonym";
 					if (user != null) name = MainHandler.getPrefixName(user);
-					hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
+					hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()));
 				}
 			}
 			hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getName());

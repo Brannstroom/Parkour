@@ -170,7 +170,7 @@ public class ParkourCommand implements CommandExecutor, TabCompleter {
 				}
 			}
 			else {
-				tabList.add("LISTE");tabList.add("TP");tabList.add("STATS");
+				tabList.add("liste");tabList.add("tp");tabList.add("stats");
 			}
 		} 
 		if (args.length == 2) {

@@ -29,9 +29,6 @@ public class MainHandler {
         String sec = "";
         String milli = "";
         
-		if(minutes < 100) {
-			min += "0";
-		}
 		if(minutes < 10) {
 			min += "0";
 		}
