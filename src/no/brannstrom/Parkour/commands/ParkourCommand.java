@@ -29,6 +29,12 @@ public class ParkourCommand implements CommandExecutor, TabCompleter {
 			if(args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("liste")) {
 				MessageHandler.sendList(player);
 			}
+			else if(args[0].equalsIgnoreCase("stats") || args[0].equalsIgnoreCase("statistikk")) {
+				player.sendMessage(ChatColor.RED + "Du må spesifisere parkour. Bruk '/parkour liste' for å se en liste over alle parkours.");
+			}
+			else if(args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("teleport")) {
+				player.sendMessage(ChatColor.RED + "Du må spesifisere parkour. Bruk '/parkour liste' for å se en liste over alle parkours.");
+			}
 			else {
 				MessageHandler.sendPlayerInfoMessage(player);
 			}
@@ -151,11 +157,27 @@ public class ParkourCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
 		List<String> tabList = new ArrayList<String>();
+		if (args.length == 1) {
+			Player player = (Player) sender;
+			List<String> arguments = new ArrayList<>();
+			arguments.add("liste");arguments.add("tp");arguments.add("stats");arguments.add("info");arguments.add("create");arguments.add("remove");arguments.add("setJoin");
+			arguments.add("setStart");arguments.add("setFinish");arguments.add("createHolo");arguments.add("removeHolo");arguments.add("updateHolo");
+			if(player.hasPermission("spillere.admin")) {
+				for(String s : arguments) {
+					if(s.toLowerCase().startsWith(args[0].toLowerCase())) {
+						tabList.add(s);
+					}
+				}
+			}
+			else {
+				tabList.add("LISTE");tabList.add("TP");tabList.add("STATS");
+			}
+		} 
 		if (args.length == 2) {
 			for (Parkour parkour : ParkourService.getParkours()) {
-				String homeName = parkour.getName();
-				if (homeName.toLowerCase().startsWith(args[0].toLowerCase())) {
-					tabList.add(homeName);
+				String parkourname = parkour.getName();
+				if (parkourname.toLowerCase().startsWith(args[1].toLowerCase())) {
+					tabList.add(parkourname);
 				}
 			}
 		}

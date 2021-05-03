@@ -1,8 +1,6 @@
 package no.brannstrom.Parkour.handlers;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -22,8 +20,36 @@ public class MainHandler {
 		p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
 	}
 	
-	public static String formatTime(long millis) {
-		return new SimpleDateFormat("mm:ss:SSS").format(new Date(millis));
+	public static String formatTime(long millis) { 
+        long minutes = (millis / 1000) / 60;
+        long seconds = (millis / 1000) % 60;      
+        long milliseconds = millis % 1000;
+
+        String min = "";
+        String sec = "";
+        String milli = "";
+        
+		if(minutes < 100) {
+			min += "0";
+		}
+		if(minutes < 10) {
+			min += "0";
+		}
+		if(seconds < 10) {
+			sec += "0";
+		}
+		if(milliseconds < 100) {
+			milli += "0";
+		}
+		if(milliseconds < 10) {
+			milli += "0";
+		}
+		
+		min += minutes;
+		sec += seconds;
+		milli += milliseconds;
+        
+		return min+":"+sec+"."+milli;
 	}
 	
 	public static void broadcastMessage(Parkour parkour, String msg){

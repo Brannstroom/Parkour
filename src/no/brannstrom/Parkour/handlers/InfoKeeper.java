@@ -21,5 +21,4 @@ public class InfoKeeper {
 	public static String permission = ChatColor.RED + "Du har ikke tillatelse til å utføre denne kommandoen!";
 	public static String parkourDontExist = ChatColor.RED + "Parkouren " + ChatColor.DARK_RED + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.RED + " eksisterer ikke. Bruk '/parkour liste' for å få en liste over alle parkours.";
 	public static String parkourAlreadyExist = ChatColor.RED + "Parkouren " + ChatColor.DARK_RED + ChatColor.BOLD + "<parkour>" + ChatColor.RESET + ChatColor.RED + " eksisterer allerede.";
-	
 }
