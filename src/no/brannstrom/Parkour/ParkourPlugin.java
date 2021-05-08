@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -33,7 +34,10 @@ public class ParkourPlugin extends JavaPlugin {
 		instance = this;
 		loadListeners();
 		loadCommands();
-		
+
+        TimeZone timezoneDefault = TimeZone.getTimeZone("Europe/Oslo");
+        TimeZone.setDefault(timezoneDefault);
+        
 		List<Parkour> parkours = ParkourService.getParkours();
 		for(Parkour parkour : parkours) {
 			ParkourHandler.createHologram(parkour);
