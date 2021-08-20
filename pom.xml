@@ -6,11 +6,23 @@
 	<artifactId>Parkour</artifactId>
 	<version>1.0</version>
 
+	<properties>
+		<java.version>16</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>16</maven.compiler.source>
+		<maven.compiler.target>16</maven.compiler.target>
+		<src.dir>src/main/java</src.dir>
+	</properties>
+
 	<repositories>
 		<repository>
 			<id>jcenter</id>
 			<name>jcenter-bintray</name>
 			<url>https://jcenter.bintray.com</url>
+		</repository>
+		<repository>
+			<id>codemc-repo</id>
+			<url>https://repo.codemc.io/repository/maven-public/</url>
 		</repository>
 		<repository>
 			<id>spigot-repo</id>
@@ -19,6 +31,10 @@
 		<repository>
 			<id>destroystokyo-repo</id>
 			<url>https://repo.destroystokyo.com/repository/maven-public//</url>
+		</repository>
+		<repository>
+			<id>papermc</id>
+			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
 		<repository>
 			<id>jitpack.io</id>
@@ -36,85 +52,21 @@
 			<id>coreprotect-repo</id>
 			<url>http://maven.playpro.com/</url>
 		</repository>
-		<repository>
-			<id>codemc-repo</id>
-			<url>https://repo.codemc.io/repository/maven-public/</url>
-		</repository>
 	</repositories>
 
 	<dependencies>
-
-		<!-- Holographic Displays -->
-		<dependency>
-			<groupId>com.gmail.filoghost.holographicdisplays</groupId>
-			<artifactId>holographicdisplays-api</artifactId>
-			<version>2.4.0</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- LuckyPerms API -->
-		<dependency>
-			<groupId>net.luckperms</groupId>
-			<artifactId>api</artifactId>
-			<version>5.3</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.16</version>
+			<version>1.18.20</version>
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- This depends on the Bukkit API, Use this if you need BukkitAdapter -->
+		<!-- Paper API -->
 		<dependency>
-			<groupId>com.sk89q.worldedit</groupId>
-			<artifactId>worldedit-bukkit</artifactId>
-			<version>7.2.0-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- This doesn't depend on any platform -->
-		<dependency>
-			<groupId>com.sk89q.worldedit</groupId>
-			<artifactId>worldedit-core</artifactId>
-			<version>7.2.0-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.6</version>
-		</dependency>
-
-		<!-- Vault fra github.com/milkbowl/Vault via jitpack.io -->
-		<dependency>
-			<groupId>com.github.MilkBowl</groupId>
-			<artifactId>Vault</artifactId>
-			<version>1.7.3</version>
-		</dependency>
-
-		<!-- Votifier fra github.com/nuvotifier/NuVotifier via jitpack.io -->
-		<dependency>
-			<groupId>com.github.nuvotifier</groupId>
-			<artifactId>NuVotifier</artifactId>
-			<version>v2.7.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.projectreactor.netty</groupId>
-			<artifactId>reactor-netty</artifactId>
-			<version>0.9.11.RELEASE</version>
-		</dependency>
-
-		<!--Paperclip API -->
-		<dependency>
-			<groupId>com.destroystokyo.paper</groupId>
+			<groupId>io.papermc.paper</groupId>
 			<artifactId>paper-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<version>1.17.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -122,25 +74,19 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.5-R0.1-SNAPSHOT</version>
+			<version>1.17-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 
-		<!--CraftBukkit (jar) -->
+		<!-- Holographic Display API -->
 		<dependency>
-			<groupId>bukkit</groupId>
-			<artifactId>spigot</artifactId>
-			<version>1.16.5</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/spigot-1.16.5.jar</systemPath>
+			<groupId>com.gmail.filoghost.holographicdisplays</groupId>
+			<artifactId>holographicdisplays-api</artifactId>
+			<version>2.4.0</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Nødvendigheter for HttpClient (START) -->
-		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-json-jackson</artifactId>
-			<version>2.22</version>
-		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
@@ -149,31 +95,14 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.inject</groupId>
 			<artifactId>jersey-hk2</artifactId>
-			<version>2.28</version>
+			<version>2.32</version>
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 			<version>2.32</version>
+			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>jakarta.xml.bind</groupId>
-			<artifactId>jakarta.xml.bind-api</artifactId>
-			<version>2.3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-			<version>2.3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<!-- Nødvendigheter for HttpClient (SLUTT) -->
-
-		<!-- Bug fix? -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-parameter-names</artifactId>
@@ -189,14 +118,18 @@
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>2.12.0</version>
 		</dependency>
-
-		<!-- CoreProtect -->
+		<!-- Nødvendigheter for HttpClient (SLUTT) -->
 		<dependency>
-			<groupId>net.coreprotect</groupId>
-			<artifactId>coreprotect</artifactId>
-			<version>2.15.0</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>30.1.1-jre</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

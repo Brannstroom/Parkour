@@ -35,6 +35,7 @@ public class MessageHandler {
 		if(!ParkourService.getParkours().isEmpty()) {
 			String parkourList = "";
 			List<Parkour> parkours = ParkourService.getParkours();
+
 			for(Parkour parkour : parkours) {
 				parkourList += parkour.getName() + ", ";
 			}

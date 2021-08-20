@@ -1,5 +1,7 @@
 package no.brannstrom.Parkour.service;
 
+import no.brannstrom.Parkour.model.Parkour;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,10 +13,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.bukkit.Bukkit;
-
-import no.brannstrom.Parkour.model.Parkour;
 
 public class ParkourService {
 	
