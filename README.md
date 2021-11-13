@@ -1,4 +1,4 @@
 # Parkour
 Parkour plugin for minecraft
 
-Soft-depend: Holographic Display
+Dependancies: Holographic Display, Spillere.no
