@@ -1,0 +1,6 @@
+name: Parkour
+version: '${project.version}'
+main: me.brannstrom.ParkourPlugin
+api-version: 1.18
+softdepend: [Spillere.no, HolographicDisplays]
+authors: [ MiniGutt ]
