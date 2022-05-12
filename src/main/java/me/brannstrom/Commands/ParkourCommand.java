@@ -127,7 +127,7 @@ public class ParkourCommand implements CommandExecutor, TabCompleter {
                         if(ParkourHandler.isParkour(args[1])) {
                             Parkour parkour = ParkourHandler.getParkour(args[1]);
                             ParkourHandler.updateHologram(parkour);
-                            player.sendMessage(ChatColor.GREEN + "Du oppdaterte hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
+                            player.sendMessage(ChatColor.GREEN + "Du oppdaterte hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getParkourName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
                         }
                         else {
                             player.sendMessage(InfoKeeper.parkourDontExist.replaceAll("<parkour>", args[1]));
@@ -148,6 +148,7 @@ public class ParkourCommand implements CommandExecutor, TabCompleter {
 
         return true;
     }
+
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args){
@@ -170,7 +171,7 @@ public class ParkourCommand implements CommandExecutor, TabCompleter {
         }
         if (args.length == 2) {
             for (Parkour parkour : ParkourService.getParkours()) {
-                String parkourname = parkour.getName();
+                String parkourname = parkour.getParkourName();
                 if (parkourname.toLowerCase().startsWith(args[1].toLowerCase())) {
                     tabList.add(parkourname);
                 }

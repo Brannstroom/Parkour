@@ -5,6 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.Date;
 import java.util.UUID;
 
@@ -26,4 +29,6 @@ public class ParkourStats {
 
     private Date createdAt;
 
+    public ParkourStats() {
+    }
 }

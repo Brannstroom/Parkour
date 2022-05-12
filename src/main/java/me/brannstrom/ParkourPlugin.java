@@ -39,8 +39,10 @@ public final class ParkourPlugin extends JavaPlugin {
         TimeZone.setDefault(timezoneDefault);
 
         List<Parkour> parkours = ParkourService.getParkours();
-        for(Parkour parkour : parkours) {
-            ParkourHandler.createHologram(parkour);
+        if(parkours != null) {
+            for(Parkour parkour : parkours) {
+                ParkourHandler.createHologram(parkour);
+            }
         }
     }
 

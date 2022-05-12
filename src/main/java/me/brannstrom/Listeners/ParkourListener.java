@@ -68,7 +68,7 @@ public class ParkourListener implements Listener {
 						Parkour activeParkour = parkourPlayer.getParkour();
 						Parkour finishedParkour = ParkourHandler.getParkourByFinish(block.getLocation());
 
-						if(activeParkour.getName().equalsIgnoreCase(finishedParkour.getName())) {
+						if(activeParkour.getParkourName().equalsIgnoreCase(finishedParkour.getParkourName())) {
 							ParkourHandler.finishParkour(p, parkourPlayer);
 						}
 					}

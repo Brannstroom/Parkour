@@ -27,7 +27,7 @@ public class ParkourHandler {
 		Serialize serialize = new Serialize();
 		Location loc = serialize.deserialize(parkour.getJoinLocation());
 		if(p.getLocation().getWorld().equals(loc.getWorld())) {
-			p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getName()));
+			p.sendMessage(InfoKeeper.parkourJoined.replaceAll("<parkour>", parkour.getParkourName()));
 			p.teleport(loc);
 		}
 		else {
@@ -93,17 +93,17 @@ public class ParkourHandler {
 		if(parkourRecord != null) {
 			if(time < parkourRecord.getParkourTime()) {
 				User user = UserService.getUser(p.getUniqueId());
-				MainHandler.broadcastMessage(parkour, InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", MainHandler.formatTime(time)).replaceAll("<improvement>", MainHandler.formatTime(parkourRecord.getParkourTime()-time)));
+				MainHandler.broadcastMessage(parkour, InfoKeeper.newParkourRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getParkourName()).replaceAll("<time>", MainHandler.formatTime(time)).replaceAll("<improvement>", MainHandler.formatTime(parkourRecord.getParkourTime()-time)));
 				messageSent = true;
 			}
 		}
 		else {
 			User user = UserService.getUser(p.getUniqueId());
-			MainHandler.broadcastMessage(parkour, InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", MainHandler.formatTime(time)));
+			MainHandler.broadcastMessage(parkour, InfoKeeper.firstRecord.replaceAll("<player>", MainHandler.getPrefixName(user)).replaceAll("<parkour>", parkour.getParkourName()).replaceAll("<time>", MainHandler.formatTime(time)));
 			messageSent = true;
 		}
 
-		ParkourStats personalBest = ParkourStatsService.getPersonalBest(parkourPlayer.getUuid(), parkour.getName());
+		ParkourStats personalBest = ParkourStatsService.getPersonalBest(parkourPlayer.getUuid(), parkour.getParkourName());
 
 		if(personalBest != null) {
 			if(time < personalBest.getParkourTime()) {
@@ -124,14 +124,14 @@ public class ParkourHandler {
 			}
 			ParkourStats parkourStats = new ParkourStats();
 			parkourStats.setUuid(parkourPlayer.getUuid());
-			parkourStats.setParkourName(parkour.getName());
+			parkourStats.setParkourName(parkour.getParkourName());
 			parkourStats.setParkourTime(time);
 			ParkourStatsService.update(parkourStats);
 		}
 
 		MainHandler.sendActionBar(p, InfoKeeper.parkourFinishedHotbar);
 
-		Integer placement = ParkourStatsService.getParkourPlacement(p.getUniqueId(), parkour.getName());
+		Integer placement = ParkourStatsService.getParkourPlacement(p.getUniqueId(), parkour.getParkourName());
 		if(placement != null) {
 			if(placement <= 10) {
 				if(hologramExists(parkour)) {
@@ -173,7 +173,7 @@ public class ParkourHandler {
 
 	public static void showStats(Player p, Parkour parkour) {
 		int i = 0;
-		p.sendMessage(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
+		p.sendMessage(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getParkourName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
 		if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
 			for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
 				i++;
@@ -183,16 +183,16 @@ public class ParkourHandler {
 				if (user != null) name = MainHandler.getPrefixName(user);
 				p.sendMessage(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()) + ChatColor.GREEN + ".");
 			}
-			Integer placement = ParkourStatsService.getParkourPlacement(p.getUniqueId(), parkour.getName());
+			Integer placement = ParkourStatsService.getParkourPlacement(p.getUniqueId(), parkour.getParkourName());
 			if(placement != null) {
 				if(placement > 10) {
-					ParkourStats stats = ParkourStatsService.getPersonalBest(p.getUniqueId(), parkour.getName());
+					ParkourStats stats = ParkourStatsService.getPersonalBest(p.getUniqueId(), parkour.getParkourName());
 					p.sendMessage(ChatColor.YELLOW + "" + placement + ". " + ChatColor.WHITE + MainHandler.getPrefixName(UserService.getUser(p.getUniqueId())) + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()));
 				}
 			}
 		}
 		else {
-			p.sendMessage(ChatColor.RED + "Ingen har fullført " + ChatColor.DARK_RED + parkour.getName() + ChatColor.RED + " parkouren. Bli den første!");
+			p.sendMessage(ChatColor.RED + "Ingen har fullført " + ChatColor.DARK_RED + parkour.getParkourName() + ChatColor.RED + " parkouren. Bli den første!");
 		}
 	}
 
@@ -200,7 +200,7 @@ public class ParkourHandler {
 		if(!hologramExists(parkour)) {
 			Hologram hologram = HologramsAPI.createHologram(ParkourPlugin.instance, player.getLocation());
 			int i = 0;
-			hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
+			hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getParkourName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
 			if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
 				for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
 					i++;
@@ -211,16 +211,16 @@ public class ParkourHandler {
 					hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()));
 				}
 			}
-			hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getName());
+			hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getParkourName());
 
 			Serialize serialize = new Serialize();
 			parkour.setHoloLocation(serialize.serialize(player.getLocation()));
 			ParkourService.update(parkour);
 
-			player.sendMessage(ChatColor.GREEN + "Du satt opp hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
+			player.sendMessage(ChatColor.GREEN + "Du satt opp hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getParkourName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
 		}
 		else {
-			player.sendMessage(ChatColor.RED + "Det eksisterer allerede et hologram for " + ChatColor.DARK_RED + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.RED + " parkouren. Fjern den før du setter ny.");
+			player.sendMessage(ChatColor.RED + "Det eksisterer allerede et hologram for " + ChatColor.DARK_RED + ChatColor.BOLD + parkour.getParkourName() + ChatColor.RESET + ChatColor.RED + " parkouren. Fjern den før du setter ny.");
 		}
 	}
 
@@ -230,7 +230,7 @@ public class ParkourHandler {
 				Serialize serialize = new Serialize();
 				Hologram hologram = HologramsAPI.createHologram(ParkourPlugin.instance, serialize.deserialize(parkour.getHoloLocation()));
 				int i = 0;
-				hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getParkourName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
 				if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
 					for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
 						i++;
@@ -241,7 +241,7 @@ public class ParkourHandler {
 						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()));
 					}
 				}
-				hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getName());
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getParkourName());
 			}
 		}
 	}
@@ -260,10 +260,10 @@ public class ParkourHandler {
 		}
 
 		if(removed) {
-			player.sendMessage(ChatColor.GREEN + "Du fjernet hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
+			player.sendMessage(ChatColor.GREEN + "Du fjernet hologram for " + ChatColor.DARK_GREEN + ChatColor.BOLD + parkour.getParkourName() + ChatColor.RESET + ChatColor.GREEN + " parkouren.");
 		}
 		else {
-			player.sendMessage("" + ChatColor.DARK_RED + ChatColor.BOLD + parkour.getName() + ChatColor.RESET + ChatColor.RED + " har ikke Hologram, eller var ikke mulig å fjerne.");
+			player.sendMessage("" + ChatColor.DARK_RED + ChatColor.BOLD + parkour.getParkourName() + ChatColor.RESET + ChatColor.RED + " har ikke Hologram, eller var ikke mulig å fjerne.");
 		}
 	}
 
@@ -276,7 +276,7 @@ public class ParkourHandler {
 			if(aLoc.getBlockX() == bLoc.getBlockX() && aLoc.getBlockY() == bLoc.getBlockY() && aLoc.getBlockZ() == bLoc.getBlockZ()) {
 				hologram.clearLines();
 				int i = 0;
-				hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "------" + ChatColor.BOLD + ChatColor.GOLD + "{ " + parkour.getParkourName() + " Top }" + ChatColor.RESET + ChatColor.DARK_GRAY + "------");
 				if(!ParkourStatsService.getTop10(parkour).isEmpty()) {
 					for (ParkourStats stats : ParkourStatsService.getTop10(parkour)){
 						i++;
@@ -287,7 +287,7 @@ public class ParkourHandler {
 						hologram.appendTextLine(ChatColor.YELLOW + "" + i + ". " + ChatColor.WHITE + name + ChatColor.GRAY + " » " + ChatColor.DARK_GREEN + MainHandler.formatTime(stats.getParkourTime()));
 					}
 				}
-				hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getName());
+				hologram.appendTextLine(ChatColor.DARK_GRAY + "/parkour stats " + parkour.getParkourName());
 			}
 		}
 	}
@@ -312,10 +312,12 @@ public class ParkourHandler {
 
 	public static boolean isParkour(String name) {
 		boolean isParkour = false;
-		if(!ParkourService.getParkours().isEmpty()) {
-			for(Parkour parkour : ParkourService.getParkours()) {
-				if(parkour.getName().equalsIgnoreCase(name)) {
-					isParkour = true;
+		if(ParkourService.getParkours() != null) {
+			if(!ParkourService.getParkours().isEmpty()) {
+				for(Parkour parkour : ParkourService.getParkours()) {
+					if(parkour.getParkourName().equalsIgnoreCase(name)) {
+						isParkour = true;
+					}
 				}
 			}
 		}
@@ -325,7 +327,7 @@ public class ParkourHandler {
 	public static Parkour getParkour(String name) {
 		if(!ParkourService.getParkours().isEmpty()) {
 			for(Parkour parkour : ParkourService.getParkours()) {
-				if(parkour.getName().equalsIgnoreCase(name)) {
+				if(parkour.getParkourName().equalsIgnoreCase(name)) {
 					return parkour;
 				}
 			}
@@ -361,7 +363,7 @@ public class ParkourHandler {
 
 	public static void createParkour(Player p, String name) {
 		Parkour parkour = new Parkour();
-		parkour.setName(name);
+		parkour.setParkourName(name);
 		Location loc = p.getLocation();
 
 		Serialize serialize = new Serialize();
@@ -377,13 +379,13 @@ public class ParkourHandler {
 	}
 
 	public static void removeParkour(Player p, Parkour parkour) {
-		ParkourStatsService.deleteByParkour(parkour.getName());
+		ParkourStatsService.deleteByParkour(parkour.getParkourName());
 		if(hologramExists(parkour)) {
 			removeHologram(p, parkour);
 		}
 		ParkourService.deleteParkour(parkour);
 
-		p.sendMessage(InfoKeeper.parkourRemoved.replaceAll("<parkour>", parkour.getName()));
+		p.sendMessage(InfoKeeper.parkourRemoved.replaceAll("<parkour>", parkour.getParkourName()));
 	}
 
 	public static boolean isStartPressurePlate(Block b) {
@@ -424,7 +426,7 @@ public class ParkourHandler {
 		Serialize serialize = new Serialize();
 		parkour.setJoinLocation(serialize.serialize(p.getLocation()));
 		ParkourService.update(parkour);
-		p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("<parkour>", parkour.getName()));
+		p.sendMessage(InfoKeeper.setParkourJoinLocation.replaceAll("<parkour>", parkour.getParkourName()));
 
 	}
 
@@ -432,7 +434,7 @@ public class ParkourHandler {
 		Serialize serialize = new Serialize();
 		parkour.setStartLocation(serialize.serialize(p.getLocation()));
 		ParkourService.update(parkour);
-		p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("<parkour>", parkour.getName()));
+		p.sendMessage(InfoKeeper.setParkourStartLocation.replaceAll("<parkour>", parkour.getParkourName()));
 
 	}
 
@@ -440,18 +442,18 @@ public class ParkourHandler {
 		Serialize serialize = new Serialize();
 		parkour.setFinishLocation(serialize.serialize(p.getLocation()));
 		ParkourService.update(parkour);
-		p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("<parkour>", parkour.getName()));
+		p.sendMessage(InfoKeeper.setParkourFinishLocation.replaceAll("<parkour>", parkour.getParkourName()));
 	}
 
 	public static void sendFinishMessageUnimproved(Player p, Parkour parkour, long time) {
-		p.sendMessage(InfoKeeper.finishedParkour.replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", MainHandler.formatTime(time)));
+		p.sendMessage(InfoKeeper.finishedParkour.replaceAll("<parkour>", parkour.getParkourName()).replaceAll("<time>", MainHandler.formatTime(time)));
 	}
 
 	public static void sendFinishMessageImproved(Player p, Parkour parkour, long previousTime, long newTime) {
-		p.sendMessage(InfoKeeper.improvedTime.replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", MainHandler.formatTime(newTime)).replaceAll("<improvement>", MainHandler.formatTime(previousTime-newTime)));
+		p.sendMessage(InfoKeeper.improvedTime.replaceAll("<parkour>", parkour.getParkourName()).replaceAll("<time>", MainHandler.formatTime(newTime)).replaceAll("<improvement>", MainHandler.formatTime(previousTime-newTime)));
 	}
 
 	public static void sendFirstTimeFinish(Player p, Parkour parkour, long time) {
-		p.sendMessage(InfoKeeper.firstTimeFinishingParkour.replaceAll("<parkour>", parkour.getName()).replaceAll("<time>", MainHandler.formatTime(time)));
+		p.sendMessage(InfoKeeper.firstTimeFinishingParkour.replaceAll("<parkour>", parkour.getParkourName()).replaceAll("<time>", MainHandler.formatTime(time)));
 	}
 }

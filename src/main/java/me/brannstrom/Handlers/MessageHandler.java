@@ -36,7 +36,7 @@ public class MessageHandler {
 			List<Parkour> parkours = ParkourService.getParkours();
 
 			for(Parkour parkour : parkours) {
-				parkourList += parkour.getName() + ", ";
+				parkourList += parkour.getParkourName() + ", ";
 			}
 			parkourList = parkourList.substring(0, parkourList.length() - 2);
 
@@ -51,7 +51,7 @@ public class MessageHandler {
 	}
 
 	public static void showParkourInfo(Player p, Parkour parkour) {
-		p.sendMessage(ChatColor.GREEN + "Parkour navn: " + ChatColor.RESET + parkour.getName());
+		p.sendMessage(ChatColor.GREEN + "Parkour navn: " + ChatColor.RESET + parkour.getParkourName());
 		Serialize serialize = new Serialize();
 		Location joinLocation = serialize.deserialize(parkour.getJoinLocation());
 		Location startLocation = serialize.deserialize(parkour.getStartLocation());

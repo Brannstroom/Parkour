@@ -6,6 +6,7 @@ import me.brannstrom.Model.User;
 import me.brannstrom.ParkourPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -20,8 +21,9 @@ import java.util.UUID;
 
 public class UserService {
 
-    private static final Client client = ClientBuilder.newClient();
+    private static final Client client = ClientBuilder.newClient().register(JacksonJsonProvider.class);
     private static final String url = ParkourPlugin.instance.getConfig().getString("api.url");
+
     public static List<User> cache = Collections.synchronizedList(new ArrayList<>());
 
     public static void update(User user) {

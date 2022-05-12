@@ -3,6 +3,7 @@ package me.brannstrom.Service;
 import me.brannstrom.Model.Parkour;
 import me.brannstrom.Model.ParkourStats;
 import me.brannstrom.ParkourPlugin;
+import org.glassfish.jersey.jackson.internal.jackson.jaxrs.json.JacksonJsonProvider;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -19,7 +20,7 @@ public class ParkourStatsService {
 
     private static List<ParkourStats> cache = Collections.synchronizedList(new ArrayList<>());
 
-    private static final Client client = ClientBuilder.newClient();
+    private static final Client client = ClientBuilder.newClient().register(JacksonJsonProvider.class);
     private static final String url = ParkourPlugin.instance.getConfig().getString("api.url");
 
     public static ParkourStats update(ParkourStats parkourStats) {
@@ -65,7 +66,7 @@ public class ParkourStatsService {
     public static ParkourStats getParkourRecord(Parkour parkour) {
         ParkourStats response = client
                 .target("http://" + url + "/parkourStatses/search/findFirstByParkourNameOrderByParkourTimeAsc")
-                .queryParam("parkourName", parkour.getName())
+                .queryParam("parkourName", parkour.getParkourName())
                 .request(MediaType.APPLICATION_JSON)
                 .get(Response.class)
                 .readEntity(new GenericType<ParkourStats>() {});
@@ -77,7 +78,7 @@ public class ParkourStatsService {
         try {
             return client
                     .target("http://" + url + "/parkourStatses/search/findTop10ByParkourNameOrderByParkourTimeAsc")
-                    .queryParam("parkourName", parkour.getName())
+                    .queryParam("parkourName", parkour.getParkourName())
                     .request(MediaType.APPLICATION_JSON)
                     .get(Response.class)
                     .readEntity(new GenericType<List<ParkourStats>>() {});

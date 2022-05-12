@@ -5,18 +5,21 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.util.Date;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"uuid"})
+@EqualsAndHashCode(of = {"id"})
 public class Parkour {
 
-    private UUID uuid;
+    private UUID id;
 
-    private String name;
+    private String parkourName;
 
     private String joinLocation;
 
@@ -29,4 +32,7 @@ public class Parkour {
     private Date updatedAt;
 
     private Date createdAt;
+
+    public Parkour() {
+    }
 }
